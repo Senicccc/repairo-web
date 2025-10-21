@@ -25,7 +25,6 @@ class RepairController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'nullable|string|max:255',
             'phone' => 'required|string|max:255',
             'phone_brand' => 'required|string|max:255',
             'phone_model' => 'required|string|max:255',
@@ -41,10 +40,6 @@ class RepairController extends Controller
         $repair = new Repair();
         $repair->tracking_id = $trackingId;
         $repair->phone = $validated['phone'];
-        // store customer_name if cashier provided a name
-        if (!empty($validated['name'])) {
-            $repair->customer_name = $validated['name'];
-        }
         // Attach to existing user by phone if present
         $user = User::where('phone', $validated['phone'])->first();
         if ($user) {

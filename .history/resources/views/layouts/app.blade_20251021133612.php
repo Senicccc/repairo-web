@@ -6,7 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
-        <title>{{ config('app.name', 'Repairo: Smartphone and Gadget Fix') }}</title>
+        <title>{{ config('app.name', 'Repairo') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

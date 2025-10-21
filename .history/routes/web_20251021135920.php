@@ -52,8 +52,8 @@ Route::middleware(['auth', 'role:technician'])->group(function () {
     Route::get('/technician/dashboard', [HomeController::class, 'technicianDashboard'])->name('technician.dashboard');
     Route::get('/technician/repairs', [RepairController::class, 'index'])->name('technician.repairs');
     Route::post('/technician/repairs/{id}/update', [RepairController::class, 'update'])->name('technician.repairs.update');
-    // Technician claims a job
-    Route::post('/technician/claim/{id}', [RepairController::class, 'claim'])->name('technician.claim');
+        Route::post('/technician/claim/{id}', [RepairController::class, 'claim'])->name('technician.claim');
+        
 });
 
 // ADMIN

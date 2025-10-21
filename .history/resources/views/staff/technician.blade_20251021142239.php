@@ -10,27 +10,14 @@
         @if ($currentJobs && $currentJobs->count() > 0)
             <div class="space-y-4">
                 @foreach($currentJobs as $cj)
-                <div class="bg-white p-4 rounded shadow" 
-                     data-active-id="{{ $cj->id }}" 
-                     data-sparepart="{{ e($cj->sparepart) }}" 
-                     data-diagnosis="{{ e($cj->diagnosis) }}" 
-                     data-status="{{ $cj->status }}" 
-                     data-cost="{{ $cj->cost }}">
-                    <p><strong>ID:</strong> {{ $cj->id }}</p>
+                <div class="bg-white p-4 rounded shadow" data-active-id="{{ $cj->id }}" 
+                     data-sparepart="{{ e($cj->sparepart) }}" data-diagnosis="{{ e($cj->diagnosis) }}" data-status="{{ $cj->status }}" data-cost="{{ $cj->cost }}">
                     <p><strong>Tracking:</strong> {{ $cj->tracking_id }}</p>
-                    <p><strong>Customer:</strong> {{ $cj->customer_name ?? ($cj->user->name ?? '-') }}</p>
-                    <p><strong>Phone:</strong> {{ $cj->phone ?? ($cj->user->phone ?? '-') }}</p>
-                    <p><strong>Brand:</strong> {{ $cj->phone_brand }}</p>
-                    <p><strong>Model:</strong> {{ $cj->phone_model }}</p>
-                    <p><strong>IMEI:</strong> {{ $cj->imei ?? '-' }}</p>
+                    <p><strong>Customer:</strong> {{ $cj->user->name ?? $cj->customer_name ?? '-' }}</p>
+                        <p><strong>Phone:</strong> {{ $cj->phone ?? ($cj->user->phone ?? '-') }}</p>
+                        <p><strong>IMEI:</strong> {{ $cj->imei ?? '-' }}</p>
                     <p><strong>Complaint:</strong> {{ $cj->complaint }}</p>
                     <p><strong>Status:</strong> {{ ucfirst($cj->status) }}</p>
-                    <p><strong>Technician:</strong> {{ $cj->technician ?? ($cj->technicianUser->name ?? '-') }}</p>
-                    <p><strong>Sparepart:</strong> {{ $cj->sparepart ?? '-' }}</p>
-                    <p><strong>Diagnosis:</strong> {{ $cj->diagnosis ?? '-' }}</p>
-                    <p><strong>Cost:</strong> {{ $cj->cost ?? '-' }}</p>
-                    <p><strong>Created At:</strong> {{ $cj->created_at->format('Y-m-d H:i') }}</p>
-                    <p><strong>Updated At:</strong> {{ $cj->updated_at->format('Y-m-d H:i') }}</p>
                     <div class="mt-3">
                         <button onclick="openJobModal({{ $cj->id }})" class="bg-green-600 text-white px-3 py-1 rounded">Update & Finish</button>
                     </div>
@@ -45,46 +32,31 @@
     {{-- Available Jobs --}}
     <div class="mb-6">
         <h3 class="text-xl font-semibold mb-2">Available Jobs</h3>
-        <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <table class="min-w-full border border-gray-200 text-sm">
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
-                        <th class="px-3 py-2 border">ID</th>
                         <th class="px-3 py-2 border">Tracking ID</th>
                         <th class="px-3 py-2 border">Customer</th>
+                                <th class="px-3 py-2 border">IMEI</th>
                         <th class="px-3 py-2 border">Phone</th>
                         <th class="px-3 py-2 border">Brand</th>
                         <th class="px-3 py-2 border">Model</th>
-                        <th class="px-3 py-2 border">IMEI</th>
+                                <th class="px-3 py-2 border">Created</th>
                         <th class="px-3 py-2 border">Complaint</th>
-                        <th class="px-3 py-2 border">Status</th>
-                        <th class="px-3 py-2 border">Technician</th>
-                        <th class="px-3 py-2 border">Sparepart</th>
-                        <th class="px-3 py-2 border">Diagnosis</th>
-                        <th class="px-3 py-2 border">Cost</th>
-                        <th class="px-3 py-2 border">Created At</th>
-                        <th class="px-3 py-2 border">Updated At</th>
                         <th class="px-3 py-2 border">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($availableJobs as $repair)
                     <tr class="text-center" data-repair-id="{{ $repair->id }}">
-                        <td class="border px-3 py-2">{{ $repair->id }}</td>
                         <td class="border px-3 py-2">{{ $repair->tracking_id }}</td>
-                        <td class="border px-3 py-2">{{ $repair->customer_name ?? ($repair->user->name ?? '-') }}</td>
+                        <td class="border px-3 py-2">{{ $repair->user->name ?? $repair->customer_name ?? '-' }}</td>
                         <td class="border px-3 py-2">{{ $repair->phone ?? ($repair->user->phone ?? '-') }}</td>
                         <td class="border px-3 py-2">{{ $repair->phone_brand }}</td>
                         <td class="border px-3 py-2">{{ $repair->phone_model }}</td>
-                        <td class="border px-3 py-2">{{ $repair->imei ?? '-' }}</td>
+                                <td class="border px-3 py-2">{{ $repair->created_at->format('Y-m-d') }}</td>
                         <td class="border px-3 py-2">{{ $repair->complaint }}</td>
-                        <td class="border px-3 py-2">{{ ucfirst($repair->status) }}</td>
-                        <td class="border px-3 py-2">{{ $repair->technician ?? ($repair->technicianUser->name ?? '-') }}</td>
-                        <td class="border px-3 py-2">{{ $repair->sparepart ?? '-' }}</td>
-                        <td class="border px-3 py-2">{{ $repair->diagnosis ?? '-' }}</td>
-                        <td class="border px-3 py-2">{{ $repair->cost ?? '-' }}</td>
-                        <td class="border px-3 py-2">{{ $repair->created_at->format('Y-m-d H:i') }}</td>
-                        <td class="border px-3 py-2">{{ $repair->updated_at->format('Y-m-d H:i') }}</td>
                         <td class="border px-3 py-2">
                             <form method="POST" action="{{ route('technician.claim', $repair->id) }}">
                                 @csrf
@@ -93,7 +65,7 @@
                         </td>
                     </tr>
                     @empty
-                    <tr><td colspan="16" class="p-4 text-center">No available jobs.</td></tr>
+                    <tr><td colspan="7" class="p-4 text-center">No available jobs.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -103,48 +75,28 @@
     {{-- Finished / Other Jobs --}}
     <div>
         <h3 class="text-xl font-semibold mb-2">Finished / Your Jobs</h3>
-        <div class="bg-white shadow-md rounded-lg overflow-x-auto">
+        <div class="bg-white shadow-md rounded-lg overflow-hidden">
             <table class="min-w-full border border-gray-200 text-sm">
                 <thead class="bg-gray-100 text-gray-700">
                     <tr>
-                        <th class="px-3 py-2 border">ID</th>
                         <th class="px-3 py-2 border">Tracking ID</th>
                         <th class="px-3 py-2 border">Customer</th>
-                        <th class="px-3 py-2 border">Phone</th>
-                        <th class="px-3 py-2 border">Brand</th>
-                        <th class="px-3 py-2 border">Model</th>
-                        <th class="px-3 py-2 border">IMEI</th>
-                        <th class="px-3 py-2 border">Complaint</th>
-                        <th class="px-3 py-2 border">Status</th>
                         <th class="px-3 py-2 border">Technician</th>
-                        <th class="px-3 py-2 border">Sparepart</th>
-                        <th class="px-3 py-2 border">Diagnosis</th>
-                        <th class="px-3 py-2 border">Cost</th>
-                        <th class="px-3 py-2 border">Created At</th>
-                        <th class="px-3 py-2 border">Updated At</th>
+                        <th class="px-3 py-2 border">Status</th>
+                        <th class="px-3 py-2 border">Updated</th>
                     </tr>
                 </thead>
                 <tbody>
                     @forelse ($otherJobs as $r)
                     <tr class="text-center">
-                        <td class="border px-3 py-2">{{ $r->id }}</td>
                         <td class="border px-3 py-2">{{ $r->tracking_id }}</td>
-                        <td class="border px-3 py-2">{{ $r->customer_name ?? ($r->user->name ?? '-') }}</td>
-                        <td class="border px-3 py-2">{{ $r->phone ?? ($r->user->phone ?? '-') }}</td>
-                        <td class="border px-3 py-2">{{ $r->phone_brand }}</td>
-                        <td class="border px-3 py-2">{{ $r->phone_model }}</td>
-                        <td class="border px-3 py-2">{{ $r->imei ?? '-' }}</td>
-                        <td class="border px-3 py-2">{{ $r->complaint }}</td>
-                        <td class="border px-3 py-2">{{ ucfirst($r->status) }}</td>
+                        <td class="border px-3 py-2">{{ $r->user->name ?? '-' }}</td>
                         <td class="border px-3 py-2">{{ $r->technician ?? ($r->technicianUser->name ?? '-') }}</td>
-                        <td class="border px-3 py-2">{{ $r->sparepart ?? '-' }}</td>
-                        <td class="border px-3 py-2">{{ $r->diagnosis ?? '-' }}</td>
-                        <td class="border px-3 py-2">{{ $r->cost ?? '-' }}</td>
-                        <td class="border px-3 py-2">{{ $r->created_at->format('Y-m-d H:i') }}</td>
+                        <td class="border px-3 py-2">{{ ucfirst($r->status) }}</td>
                         <td class="border px-3 py-2">{{ $r->updated_at->format('Y-m-d H:i') }}</td>
                     </tr>
                     @empty
-                    <tr><td colspan="16" class="p-4 text-center">No jobs yet.</td></tr>
+                    <tr><td colspan="5" class="p-4 text-center">No jobs yet.</td></tr>
                     @endforelse
                 </tbody>
             </table>
@@ -159,7 +111,6 @@
         <input type="hidden" name="repair_id" id="modal_repair_id">
         <textarea name="sparepart" placeholder="Sparepart used" class="w-full border p-2 mb-3 rounded"></textarea>
         <textarea name="diagnosis" placeholder="Final Diagnosis" class="w-full border p-2 mb-3 rounded"></textarea>
-        <input type="number" step="0.01" name="cost" placeholder="Cost" class="w-full border p-2 mb-3 rounded">
         <select name="status" class="w-full border p-2 mb-3 rounded">
             <option value="in_progress">In Progress</option>
             <option value="finished">Finished</option>
@@ -176,9 +127,10 @@
     function openJobModal(id) {
         const activeCard = document.querySelector(`[data-active-id='${id}']`) || document.querySelector(`tr[data-repair-id='${id}']`);
         const form = document.getElementById('jobForm');
-        form.action = `/technician/repairs/${id}/update`;
+    form.action = `/technician/repairs/${id}/update`;
         document.getElementById('modal_repair_id').value = id;
 
+        // Prefill fields if available
         const spare = activeCard?.getAttribute('data-sparepart') || '';
         const diag = activeCard?.getAttribute('data-diagnosis') || '';
         const status = activeCard?.getAttribute('data-status') || 'in_progress';
@@ -188,6 +140,7 @@
         form.querySelector("textarea[name='diagnosis']").value = diag;
         form.querySelector("select[name='status']").value = status;
 
+        // if cost field exists in modal (not currently present), set it
         const costField = form.querySelector("input[name='cost']");
         if (costField) costField.value = cost;
 

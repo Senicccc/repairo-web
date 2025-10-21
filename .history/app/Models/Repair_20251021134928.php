@@ -11,7 +11,6 @@ class Repair extends Model
 
     protected $fillable = [
         'user_id',
-        'customer_name',
         'phone',
         'phone_brand',
         'phone_model',

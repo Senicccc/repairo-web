@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Repair;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 
 class RepairController extends Controller
 {
@@ -25,7 +23,6 @@ class RepairController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'nullable|string|max:255',
             'phone' => 'required|string|max:255',
             'phone_brand' => 'required|string|max:255',
             'phone_model' => 'required|string|max:255',
@@ -41,15 +38,6 @@ class RepairController extends Controller
         $repair = new Repair();
         $repair->tracking_id = $trackingId;
         $repair->phone = $validated['phone'];
-        // store customer_name if cashier provided a name
-        if (!empty($validated['name'])) {
-            $repair->customer_name = $validated['name'];
-        }
-        // Attach to existing user by phone if present
-        $user = User::where('phone', $validated['phone'])->first();
-        if ($user) {
-            $repair->user_id = $user->id;
-        }
         $repair->phone_brand = $validated['phone_brand'];
         $repair->phone_model = $validated['phone_model'];
         $repair->imei = $validated['imei'] ?? null;
@@ -89,39 +77,10 @@ class RepairController extends Controller
     {
         $repair = Repair::findOrFail($id);
 
-        $user = Auth::user();
-
-        // If DB has technician_id column use it; otherwise fall back to 'technician' string
-        if (Schema::hasColumn('repairs', 'technician_id')) {
-            // Prevent claiming if already assigned
-            if ($repair->technician_id) {
-                return redirect()->back()->with('error', 'This job has already been claimed by another technician.');
-            }
-
-            // Allow up to 6 in-progress jobs per technician
-            $activeCount = Repair::where('technician_id', $user->id)->where('status', 'in_progress')->count();
-            if ($activeCount >= 6) {
-                return redirect()->back()->with('error', "You already have {$activeCount} active jobs (limit 6). Finish some before claiming another.");
-            }
-
-            // Assign the currently authenticated technician
-            $repair->technician_id = $user->id;
-            $repair->technician = $user->name; // keep readable name as well
-            $repair->status = 'in_progress';
-        } else {
-            // Legacy flow using technician string
-            if ($repair->technician) {
-                return redirect()->back()->with('error', 'This job has already been claimed by another technician.');
-            }
-
-            $activeCount = Repair::where('technician', $user->name)->where('status', 'in_progress')->count();
-            if ($activeCount >= 6) {
-                return redirect()->back()->with('error', "You already have {$activeCount} active jobs (limit 6). Finish some before claiming another.");
-            }
-
-            $repair->technician = $user->name;
-            $repair->status = 'in_progress';
-        }
+        // Assign the currently authenticated technician
+        $user = auth()->user();
+        $repair->technician = $user->name;
+        $repair->status = 'in_progress';
 
         // optional fields from technician
         if ($request->filled('sparepart')) {

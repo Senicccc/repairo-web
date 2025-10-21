@@ -10,31 +10,23 @@ class Repair extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'customer_name',
         'phone',
-        'phone_brand',
-        'phone_model',
-        'imei',
-        'complaint',
+        'device_type',
+        'brand',
+        'model',
+        'damage_description',
         'status',
         'diagnosis',
-        'sparepart',
+        
         'tracking_id',
         'technician',
-        'technician_id',
         'cost',
     ];
 
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function technicianUser()
-    {
-        return $this->belongsTo(User::class, 'technician_id');
+        return $this->belongsTo(User::class, 'phone', 'phone');
     }
 
     public function payment()

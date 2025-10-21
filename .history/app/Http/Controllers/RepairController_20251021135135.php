@@ -25,7 +25,6 @@ class RepairController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'nullable|string|max:255',
             'phone' => 'required|string|max:255',
             'phone_brand' => 'required|string|max:255',
             'phone_model' => 'required|string|max:255',
@@ -41,15 +40,6 @@ class RepairController extends Controller
         $repair = new Repair();
         $repair->tracking_id = $trackingId;
         $repair->phone = $validated['phone'];
-        // store customer_name if cashier provided a name
-        if (!empty($validated['name'])) {
-            $repair->customer_name = $validated['name'];
-        }
-        // Attach to existing user by phone if present
-        $user = User::where('phone', $validated['phone'])->first();
-        if ($user) {
-            $repair->user_id = $user->id;
-        }
         $repair->phone_brand = $validated['phone_brand'];
         $repair->phone_model = $validated['phone_model'];
         $repair->imei = $validated['imei'] ?? null;
@@ -98,10 +88,10 @@ class RepairController extends Controller
                 return redirect()->back()->with('error', 'This job has already been claimed by another technician.');
             }
 
-            // Allow up to 6 in-progress jobs per technician
-            $activeCount = Repair::where('technician_id', $user->id)->where('status', 'in_progress')->count();
-            if ($activeCount >= 6) {
-                return redirect()->back()->with('error', "You already have {$activeCount} active jobs (limit 6). Finish some before claiming another.");
+            // Prevent technician from taking multiple in-progress jobs
+            $active = Repair::where('technician_id', $user->id)->where('status', 'in_progress')->exists();
+            if ($active) {
+                return redirect()->back()->with('error', 'You already have an active job. Finish it before claiming another.');
             }
 
             // Assign the currently authenticated technician
@@ -114,9 +104,9 @@ class RepairController extends Controller
                 return redirect()->back()->with('error', 'This job has already been claimed by another technician.');
             }
 
-            $activeCount = Repair::where('technician', $user->name)->where('status', 'in_progress')->count();
-            if ($activeCount >= 6) {
-                return redirect()->back()->with('error', "You already have {$activeCount} active jobs (limit 6). Finish some before claiming another.");
+            $active = Repair::where('technician', $user->name)->where('status', 'in_progress')->exists();
+            if ($active) {
+                return redirect()->back()->with('error', 'You already have an active job. Finish it before claiming another.');
             }
 
             $repair->technician = $user->name;

@@ -31,11 +31,11 @@ class HomeController extends Controller
 
         // If the DB has technician_id column, use it; otherwise fall back to the legacy 'technician' string
         if (Schema::hasColumn('repairs', 'technician_id')) {
-            // Current jobs assigned to this technician (in_progress)
-            $currentJobs = \App\Models\Repair::with('user','payment','technicianUser')
+            // Current job assigned to this technician (in_progress)
+            $currentJob = \App\Models\Repair::with('user','payment','technicianUser')
                 ->where('technician_id', $user->id)
                 ->where('status', 'in_progress')
-                ->get();
+                ->first();
 
             // Available jobs not yet claimed
             $availableJobs = \App\Models\Repair::with('user','payment')
@@ -53,10 +53,10 @@ class HomeController extends Controller
                 ->get();
         } else {
             // Legacy fallback: technician stored as name in 'technician' column
-            $currentJobs = \App\Models\Repair::with('user','payment')
+            $currentJob = \App\Models\Repair::with('user','payment')
                 ->where('technician', $user->name)
                 ->where('status', 'in_progress')
-                ->get();
+                ->first();
 
             $availableJobs = \App\Models\Repair::with('user','payment')
                 ->where(function ($q) {
@@ -74,7 +74,7 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('staff.technician', compact('currentJobs', 'availableJobs', 'otherJobs'));
+        return view('staff.technician', compact('currentJob', 'availableJobs', 'otherJobs'));
     }
 
     public function adminDashboard()
