@@ -1,0 +1,59 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
+use App\Models\Repair;
+use App\Http\Requests\ProfileUpdateRequest;
+
+class ProfileController extends Controller
+{
+    public function show(Request $request): View
+    {
+        $user = $request->user();
+        $repairs = $user->role === 'technician'
+            ? Repair::where('technician_id', $user->id)->get()
+            : Repair::where('user_id', $user->id)->get();
+
+        return view('profile.show', compact('user', 'repairs'));
+    }
+
+    public function edit(Request $request): View
+    {
+        return view('profile.edit', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function update(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $request->user()->fill($request->validated());
+
+        if ($request->user()->isDirty('email')) {
+            $request->user()->email_verified_at = null;
+        }
+
+        $request->user()->save();
+
+        return Redirect::route('profile.show')->with('status', 'Profile updated');
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = $request->user();
+        Auth::logout();
+        $user->delete();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
+    }
+}

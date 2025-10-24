@@ -26,7 +26,6 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
 // ============================================================
 // ROLE-BASED ROUTES
 // ============================================================

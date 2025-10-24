@@ -22,6 +22,21 @@
             <input type="email" name="email" value="{{ old('email', $user->email) }}" class="w-full border rounded p-2">
         </div>
 
+        <div class="mb-3">
+            <label class="block mb-1 font-semibold">Created At</label>
+            <input type="text" name="created_at" value="{{ old('created_at', $user->created_at) }}" class="w-full border rounded p-2" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="block mb-1 font-semibold">Updated At</label>
+            <input type="text" name="updated_at" value="{{ old('updated_at', $user->updated_at) }}" class="w-full border rounded p-2" readonly>
+        </div>
+
+        <div class="mb-3">
+            <label class="block mb-1 font-semibold">Role</label>
+            <input type="text" name="role" value="{{ old('role', $user->role) }}" class="w-full border rounded p-2">
+        </div>
+
         <div class="flex justify-between mt-6">
             <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
                 Save Changes

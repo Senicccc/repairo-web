@@ -16,16 +16,12 @@ Route::get('/dashboard', [HomeController::class, 'dashboardRedirect'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// ============================================================
-// PROFILE ROUTES
-// ============================================================
-Route::middleware(['auth'])->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+// Profile routes
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-
 
 // ============================================================
 // ROLE-BASED ROUTES
@@ -45,9 +41,8 @@ Route::middleware(['auth', 'role:cashier'])->group(function () {
     Route::post('/cashier/repairs', [RepairController::class, 'store'])->name('repairs.store');
     Route::post('/cashier/repairs/{id}/finish', [RepairController::class, 'update'])->name('cashier.repairs.finish');
     Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
-
     Route::get('/invoice/{id}', function($id) {
-        $repair = \App\Models\Repair::with('user', 'payment')->findOrFail($id);
+        $repair = \App\Models\Repair::with('user','payment')->findOrFail($id);
         return view('invoice.show', compact('repair'));
     })->name('invoice.show');
 });
@@ -55,7 +50,6 @@ Route::middleware(['auth', 'role:cashier'])->group(function () {
 // TECHNICIAN
 Route::middleware(['auth', 'role:technician'])->group(function () {
     Route::get('/technician/dashboard', [RepairController::class, 'technicianDashboard'])->name('technician.dashboard');
-    Route::get('/technician/jobs', [RepairController::class, 'technicianJobs'])->name('technician.jobs');
     Route::post('/technician/repairs/{id}/update', [RepairController::class, 'update'])->name('technician.repairs.update');
     Route::post('/technician/claim/{id}', [RepairController::class, 'claim'])->name('technician.claim');
 });
@@ -66,13 +60,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/payments', [PaymentController::class, 'index'])->name('admin.payments');
 });
 
-// ============================================================
-// TRACKING (Public)
-// ============================================================
+
+// Tracking
 Route::get('/tracking', [TrackingController::class, 'index'])->name('tracking');
 Route::post('/tracking', [TrackingController::class, 'search'])->name('tracking.search');
 
-// ============================================================
-// AUTH ROUTES
-// ============================================================
+// Auth routes
 require __DIR__.'/auth.php';
