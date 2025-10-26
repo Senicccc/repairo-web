@@ -91,7 +91,16 @@ Route::middleware('auth')->group(function(){
 Route::get('/admin/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])
     ->name('admin.dashboard')
     ->middleware(['auth', 'role:admin']);
-    
+    use App\Http\Controllers\Admin\AdminController;
+
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/repairs', [AdminController::class, 'repairs'])->name('admin.repairs');
+    Route::get('/payments', [AdminController::class, 'payments'])->name('admin.payments');
+    Route::get('/loyalty', [AdminController::class, 'loyalty'])->name('admin.loyalty');
+    Route::get('/rewards', [AdminController::class, 'rewards'])->name('admin.rewards');
+});
+
 
 
 // ============================================================

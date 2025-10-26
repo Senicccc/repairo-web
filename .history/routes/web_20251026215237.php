@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\RepairController;
 use App\Http\Controllers\LoyaltyController;
 use App\Http\Controllers\PaymentController;
@@ -88,10 +89,8 @@ Route::middleware('auth')->group(function(){
     });
 });
 
-Route::get('/admin/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])
-    ->name('admin.dashboard')
-    ->middleware(['auth', 'role:admin']);
-    
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+
 
 
 // ============================================================

@@ -91,7 +91,6 @@ Route::middleware('auth')->group(function(){
 Route::get('/admin/dashboard', [App\Http\Controllers\HomeController::class, 'adminDashboard'])
     ->name('admin.dashboard')
     ->middleware(['auth', 'role:admin']);
-    
 
 
 // ============================================================

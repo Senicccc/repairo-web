@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Models\Repair;
 use App\Models\Payment;
 use Illuminate\Http\Request;
-use App\Models\LoyaltyReward;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -82,14 +81,9 @@ class HomeController extends Controller
         return view('staff.technician', compact('currentJobs', 'availableJobs', 'otherJobs'));
     }
 
-    public function adminDashboard()
-    {
-        $users = User::all();
-        $repairs = Repair::with('user')->get();
-        $payments = Payment::with('repair.user')->get();
-        $rewards = LoyaltyReward::with('user')->get();
-        return view('staff.admin', compact('users', 'repairs', 'payments', 'rewards'));
-    }
+$rewards = \App\Models\LoyaltyReward::with('user')->get();
+return view('staff.admin', compact('users', 'repairs', 'payments', 'rewards'));
+
 
     public function dashboardRedirect()
 {

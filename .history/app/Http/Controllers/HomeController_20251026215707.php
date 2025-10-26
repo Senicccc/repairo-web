@@ -87,7 +87,7 @@ class HomeController extends Controller
         $users = User::all();
         $repairs = Repair::with('user')->get();
         $payments = Payment::with('repair.user')->get();
-        $rewards = LoyaltyReward::with('user')->get();
+        $rewards = LoyaltyRx    eward::with('user')->get();
         return view('staff.admin', compact('users', 'repairs', 'payments', 'rewards'));
     }
 
