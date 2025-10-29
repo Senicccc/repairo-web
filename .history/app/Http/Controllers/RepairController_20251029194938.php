@@ -73,6 +73,7 @@ class RepairController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'technician') {
+            // FIX: Validasi dengan semua status yang baru
             $data = $request->validate([
                 'diagnosis' => 'nullable|string',
                 'cost' => 'nullable|numeric|min:0',

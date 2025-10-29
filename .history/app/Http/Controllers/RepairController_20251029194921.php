@@ -73,16 +73,18 @@ class RepairController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'technician') {
+            // FIX: Validasi dengan semua status yang baru
             $data = $request->validate([
                 'diagnosis' => 'nullable|string',
                 'cost' => 'nullable|numeric|min:0',
                 'status' => 'required|in:pending,in_progress,diagnosed,waiting_parts,finished,cancelled',
             ]);
 
+            // FIX: Update semua field dengan data dari request
             $repair->update([
                 'diagnosis' => $data['diagnosis'] ?? $repair->diagnosis,
                 'cost' => $data['cost'] ?? $repair->cost,
-                'status' => $data['status'], 
+                'status' => $data['status'], // PAKAI STATUS DARI REQUEST, BUKAN AUTO FINISH
                 'technician_id' => $user->id,
                 'technician' => $user->name,
             ]);
@@ -228,7 +230,7 @@ class RepairController extends Controller
                 ->where('id', $sparepartId)
                 ->firstOrFail();
 
-            Log::info('Found repair_sparepart:', [
+            Log::info('🔍 Found repair_sparepart:', [
                 'id' => $repairSparepart->id,
                 'name' => $repairSparepart->name,
                 'quantity' => $repairSparepart->quantity,

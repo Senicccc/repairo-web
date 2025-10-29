@@ -9,6 +9,7 @@ class Repair extends Model
 {
     use HasFactory;
 
+    // TAMBAHKAN CONSTANTS UNTUK STATUS
     const STATUS_PENDING = 'pending';
     const STATUS_IN_PROGRESS = 'in_progress';
     const STATUS_DIAGNOSED = 'diagnosed';
@@ -38,6 +39,7 @@ class Repair extends Model
         'updated_at' => 'datetime',
     ];
 
+    // TAMBAHKAN METHOD UNTUK STATUS
     public static function getStatuses()
     {
         return [

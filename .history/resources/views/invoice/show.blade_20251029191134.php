@@ -70,6 +70,9 @@
                                 <td class="border px-2 py-1">{{ $index + 1 }}</td>
                                 <td class="border px-2 py-1">
                                     {{ $sparepart->name }}
+                                    @if($sparepart->sparepart_id)
+                                        <br><span class="text-xs text-gray-600">(ID: {{ $sparepart->sparepart_id }})</span>
+                                    @endif
                                 </td>
                                 <td class="border px-2 py-1">{{ $sparepart->category ?? '-' }}</td>
                                 <td class="border px-2 py-1 text-center">{{ $sparepart->quantity }}</td>
@@ -112,7 +115,7 @@
 
     <div class="border-t border-b py-2 mb-3 text-xs">
         <p><strong>Booking Created:</strong> {{ $repair->created_at ? $repair->created_at->format('d M Y H:i') : '-' }}</p>
-        <p><strong>Booking Updated:</strong> {{ $repair->updated_at ? $repair->updated_at->format('d M Y H:i') : '-' }}</p>
+        <p><strong>Updated:</strong> {{ $repair->updated_at ? $repair->updated_at->format('d M Y H:i') : '-' }}</p>
     </div>
 
     <div class="text-center text-xs">

@@ -76,13 +76,13 @@ class RepairController extends Controller
             $data = $request->validate([
                 'diagnosis' => 'nullable|string',
                 'cost' => 'nullable|numeric|min:0',
-                'status' => 'required|in:pending,in_progress,diagnosed,waiting_parts,finished,cancelled',
+                'status' => 'required|string|in:in_progress,finished',
             ]);
 
             $repair->update([
                 'diagnosis' => $data['diagnosis'] ?? $repair->diagnosis,
                 'cost' => $data['cost'] ?? $repair->cost,
-                'status' => $data['status'], 
+                'status' => $data['status'],
                 'technician_id' => $user->id,
                 'technician' => $user->name,
             ]);
@@ -112,7 +112,7 @@ class RepairController extends Controller
         }
 
         $activeCount = Repair::where('technician_id', $user->id)
-            ->whereIn('status', ['in_progress', 'diagnosed', 'waiting_parts']) // FIX: Include new statuses
+            ->where('status', 'in_progress')
             ->count();
 
         if ($activeCount >= 6) {
@@ -221,14 +221,14 @@ class RepairController extends Controller
     public function removeSparepart($repairId, $sparepartId)
     {
         Log::info('REMOVE SPAREPART METHOD CALLED');
-        Log::info('Removing sparepart:', ['repair_id' => $repairId, 'sparepart_id' => $sparepartId]);
+        Log::info('📦 Removing sparepart:', ['repair_id' => $repairId, 'sparepart_id' => $sparepartId]);
 
         try {
             $repairSparepart = RepairSparepart::where('repair_id', $repairId)
                 ->where('id', $sparepartId)
                 ->firstOrFail();
 
-            Log::info('Found repair_sparepart:', [
+            Log::info('🔍 Found repair_sparepart:', [
                 'id' => $repairSparepart->id,
                 'name' => $repairSparepart->name,
                 'quantity' => $repairSparepart->quantity,
@@ -253,9 +253,11 @@ class RepairController extends Controller
                 }
             }
 
+            // HAPUS dari repair_spareparts
             $repairSparepart->delete();
-            Log::info('RepairSparepart deleted successfully');
+            Log::info('✅ RepairSparepart deleted successfully');
 
+            // UPDATE repair's sparepart field
             $repair = Repair::find($repairId);
             $this->updateRepairSparepartField($repair);
 
@@ -265,7 +267,7 @@ class RepairController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error in removeSparepart:', [
+            Log::error('❌ Error in removeSparepart:', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine()
@@ -287,7 +289,7 @@ class RepairController extends Controller
         $repair->sparepart = implode(', ', $sparepartsList);
         $repair->save();
 
-        Log::info('Repair Updated:', ['sparepart_field' => $repair->sparepart]);
+        Log::info('🔄 Repair Updated:', ['sparepart_field' => $repair->sparepart]);
     }
 
     public function destroy($id)
@@ -303,12 +305,12 @@ class RepairController extends Controller
         $user = Auth::user();
 
         $currentJobs = Repair::where('technician_id', $user->id)
-            ->whereIn('status', ['in_progress', 'diagnosed', 'waiting_parts'])
+            ->where('status', 'in_progress')
             ->with(['user', 'payment', 'repairSpareparts'])
             ->get();
 
         $otherJobs = Repair::where('technician_id', $user->id)
-            ->whereIn('status', ['finished', 'cancelled'])
+            ->where('status', 'finished')
             ->with(['user', 'payment', 'repairSpareparts'])
             ->get();
 

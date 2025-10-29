@@ -70,6 +70,9 @@
                                 <td class="border px-2 py-1">{{ $index + 1 }}</td>
                                 <td class="border px-2 py-1">
                                     {{ $sparepart->name }}
+                                    @if($sparepart->sparepart_id)
+                                        <br><span class="text-xs text-gray-600">(ID: {{ $sparepart->sparepart_id }})</span>
+                                    @endif
                                 </td>
                                 <td class="border px-2 py-1">{{ $sparepart->category ?? '-' }}</td>
                                 <td class="border px-2 py-1 text-center">{{ $sparepart->quantity }}</td>

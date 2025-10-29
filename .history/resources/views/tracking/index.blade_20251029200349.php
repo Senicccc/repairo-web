@@ -263,6 +263,7 @@
 </style>
 
 <script>
+    // Animate progress bar
     document.addEventListener('DOMContentLoaded', function() {
         const progressBar = document.querySelector('.bg-blue-600.h-2');
         if (progressBar) {
