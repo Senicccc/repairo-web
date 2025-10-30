@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // ============================================================
-// USERS DASHBOARD & REPAIRS (UNTUK CUSTOMER/USER)
+// USERS DASHBOARD & REPAIRS
 // ============================================================
 Route::middleware(['auth'])->group(function () {
     // Users Dashboard
@@ -43,6 +43,14 @@ Route::middleware(['auth'])->group(function () {
     // Repair creation
     Route::get('/repairs/create', [RepairController::class, 'create'])->name('repairs.create');
     Route::post('/repairs', [RepairController::class, 'store'])->name('repairs.store');
+});
+
+// ============================================================
+// ROLE: USER (CUSTOMER) - Legacy routes (bisa dihapus kalo udah pake yang di atas)
+// ============================================================
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/user/dashboard', [HomeController::class, 'userDashboard'])->name('user.dashboard');
+    Route::get('/user/repairs', [RepairController::class, 'index'])->name('user.repairs');
 });
 
 // ============================================================

@@ -9,7 +9,6 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TrackingController;
 use App\Http\Controllers\SparepartController;
-use App\Http\Controllers\UsersDashboardController;
 
 // ============================================================
 // HALAMAN UTAMA (PUBLIC)
@@ -32,17 +31,11 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // ============================================================
-// USERS DASHBOARD & REPAIRS (UNTUK CUSTOMER/USER)
+// ROLE: USER (CUSTOMER)
 // ============================================================
-Route::middleware(['auth'])->group(function () {
-    // Users Dashboard
-    Route::get('/users/dashboard', [UsersDashboardController::class, 'index'])->name('users.dashboard');
-    Route::get('/users/repairs/history', [UsersDashboardController::class, 'repairHistory'])->name('repairs.history');
-    Route::get('/users/repairs/{id}', [UsersDashboardController::class, 'showRepair'])->name('repairs.show');
-    
-    // Repair creation
-    Route::get('/repairs/create', [RepairController::class, 'create'])->name('repairs.create');
-    Route::post('/repairs', [RepairController::class, 'store'])->name('repairs.store');
+Route::middleware(['auth', 'role:user'])->group(function () {
+    Route::get('/user/dashboard', [HomeController::class, 'userDashboard'])->name('user.dashboard');
+    Route::get('/user/repairs', [RepairController::class, 'index'])->name('user.repairs');
 });
 
 // ============================================================
@@ -81,10 +74,11 @@ Route::middleware(['auth', 'role:technician'])->group(function () {
     Route::get('/api/repairs/{id}/spareparts', function($id) {
         $spareparts = \App\Models\RepairSparepart::where('repair_id', $id)->get();
         return response()->json($spareparts);
-    });
+    })->middleware(['auth', 'role:technician']);
 
-    // Remove sparepart
+    // Remove software
     Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
+    ->middleware(['auth', 'role:technician'])
     ->name('repairs.spareparts.remove');
 });
 
@@ -95,6 +89,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin/dashboard', [HomeController::class, 'adminDashboard'])->name('admin.dashboard');
     Route::get('/admin/payments', [PaymentController::class, 'index'])->name('admin.payments');
 });
+
+
 
 // ============================================================
 // TRACKING (PUBLIC)

@@ -98,6 +98,7 @@ class HomeController extends Controller
 
         switch ($user->role) {
             case 'user':
+                // FIX: Ganti 'user.dashboard' jadi 'users.dashboard'
                 return redirect()->route('users.dashboard');
             case 'cashier':
                 return redirect()->route('cashier.dashboard');
