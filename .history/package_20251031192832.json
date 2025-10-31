@@ -5,8 +5,8 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "serve": "php artisan serve",
-        "dev:all": "concurrently \"npm run dev\" \"php artisan serve\""
+          "serve": "php artisan serve",
+  "dev:all": "concurrently \"npm run dev\" \"php artisan serve\""
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
@@ -14,7 +14,7 @@
         "alpinejs": "^3.4.2",
         "autoprefixer": "^10.4.21",
         "axios": "^1.11.0",
-        "concurrently": "^9.2.1",
+        "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0.0",
         "postcss": "^8.5.6",
         "tailwindcss": "^3.4.18",
