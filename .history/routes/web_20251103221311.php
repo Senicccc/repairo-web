@@ -110,8 +110,6 @@ Route::prefix('technician')->middleware(['auth', 'role:technician'])->group(func
         
     Route::get('/repairs/{id}/spareparts', [TechnicianController::class, 'getRepairSpareparts'])
         ->name('technician.repairs.spareparts');
-
-        
     
     // Job Management
     Route::post('/claim/{id}', [TechnicianController::class, 'claimJob'])->name('technician.claim');
@@ -131,8 +129,6 @@ Route::prefix('technician')->middleware(['auth', 'role:technician'])->group(func
 // Route untuk remove sparepart (global dengan middleware technician)
 Route::middleware(['auth', 'role:technician'])->group(function () {
     Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
-        ->name('repairs.spareparts.remove');
-            Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
         ->name('repairs.spareparts.remove');
 });
 

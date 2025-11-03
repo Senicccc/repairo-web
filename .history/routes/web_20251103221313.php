@@ -132,8 +132,6 @@ Route::prefix('technician')->middleware(['auth', 'role:technician'])->group(func
 Route::middleware(['auth', 'role:technician'])->group(function () {
     Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
         ->name('repairs.spareparts.remove');
-            Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
-        ->name('repairs.spareparts.remove');
 });
 
 // ============================================================

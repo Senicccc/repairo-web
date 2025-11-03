@@ -260,44 +260,4 @@ class RepairController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Remove sparepart from repair
-     */
-    public function removeSparepart($repairId, $sparepartId)
-    {
-        DB::beginTransaction();
-        try {
-            $repairSparepart = \App\Models\RepairSparepart::where('repair_id', $repairId)
-                ->where('id', $sparepartId)
-                ->firstOrFail();
-
-            // Kembalikan stok jika in_store
-            if ($repairSparepart->source === 'in_store' && $repairSparepart->sparepart_id) {
-                $sparepart = \App\Models\Sparepart::find($repairSparepart->sparepart_id);
-                if ($sparepart) {
-                    $sparepart->increment('stock', $repairSparepart->quantity);
-                }
-            }
-
-            $repairSparepart->delete();
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Sparepart removed successfully!'
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            
-            Log::error('Error removing sparepart: ' . $e->getMessage());
-            
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to remove sparepart: ' . $e->getMessage()
-            ], 500);
-        }
-    }
 }

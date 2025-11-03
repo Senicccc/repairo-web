@@ -105,14 +105,6 @@ Route::prefix('technician')->middleware(['auth', 'role:technician'])->group(func
     // Dashboard
     Route::get('/dashboard', [TechnicianController::class, 'dashboard'])->name('technician.dashboard');
     
-    Route::post('/repairs/{id}/spareparts', [RepairController::class, 'addSparepart'])
-        ->name('technician.repairs.add-sparepart');
-        
-    Route::get('/repairs/{id}/spareparts', [TechnicianController::class, 'getRepairSpareparts'])
-        ->name('technician.repairs.spareparts');
-
-        
-    
     // Job Management
     Route::post('/claim/{id}', [TechnicianController::class, 'claimJob'])->name('technician.claim');
     Route::post('/jobs/{id}/update', [TechnicianController::class, 'updateJob'])->name('technician.jobs.update');
@@ -121,6 +113,7 @@ Route::prefix('technician')->middleware(['auth', 'role:technician'])->group(func
     Route::get('/spareparts/search', [TechnicianController::class, 'searchSpareparts'])->name('technician.spareparts.search');
     Route::get('/repairs/{id}/spareparts', [TechnicianController::class, 'getRepairSpareparts'])->name('technician.repairs.spareparts');
     
+    // 🔥 FIXED: Route untuk add sparepart - PASTIKAN INI ADA
     Route::post('/repairs/{id}/spareparts', [RepairController::class, 'addSparepart'])->name('technician.repairs.add-sparepart');
     
     // Route untuk update sparepart field
@@ -131,8 +124,6 @@ Route::prefix('technician')->middleware(['auth', 'role:technician'])->group(func
 // Route untuk remove sparepart (global dengan middleware technician)
 Route::middleware(['auth', 'role:technician'])->group(function () {
     Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
-        ->name('repairs.spareparts.remove');
-            Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
         ->name('repairs.spareparts.remove');
 });
 

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Repair;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -157,13 +156,8 @@ class RepairController extends Controller
      */
     public function addSparepart(Request $request, $id)
     {
-        DB::beginTransaction();
         try {
             $repair = Repair::findOrFail($id);
-            
-            Log::info('=== START ADD SPAREPART ===');
-            Log::info('Repair ID: ' . $id);
-            Log::info('Request data:', $request->all());
 
             // Validasi request
             $validated = $request->validate([
@@ -175,17 +169,21 @@ class RepairController extends Controller
                 'category' => 'nullable|string|max:255',
             ]);
 
-            Log::info('Validated data:', $validated);
+            Log::info('Adding sparepart to repair', [
+                'repair_id' => $id,
+                'sparepart_id' => $validated['sparepart_id'],
+                'name' => $validated['name'],
+                'quantity' => $validated['quantity']
+            ]);
 
             // Cek duplikat sparepart (in_store + sparepart_id + source)
-            if (!empty($validated['sparepart_id'])) {
+            if ($validated['sparepart_id']) {
                 $existing = \App\Models\RepairSparepart::where('repair_id', $repair->id)
                     ->where('sparepart_id', $validated['sparepart_id'])
                     ->where('source', $validated['source'])
                     ->first();
                     
                 if ($existing) {
-                    Log::info('Existing sparepart found, updating quantity');
                     $existing->quantity += $validated['quantity'];
                     $existing->save();
                     
@@ -194,11 +192,8 @@ class RepairController extends Controller
                         $sparepart = \App\Models\Sparepart::find($validated['sparepart_id']);
                         if ($sparepart) {
                             $sparepart->decrement('stock', $validated['quantity']);
-                            Log::info('Stock decremented for sparepart: ' . $validated['sparepart_id']);
                         }
                     }
-                    
-                    DB::commit();
                     
                     return response()->json([
                         'success' => true,
@@ -214,30 +209,21 @@ class RepairController extends Controller
                 'repair_id' => $repair->id,
                 'sparepart_id' => $validated['sparepart_id'],
                 'name' => $validated['name'],
-                'category' => $validated['category'] ?? 'Unknown',
+                'category' => $validated['category'],
                 'quantity' => $validated['quantity'],
                 'price' => $validated['price'],
                 'source' => $validated['source'],
             ]);
 
-            Log::info('New repair sparepart created:', [
-                'id' => $repairSparepart->id,
-                'name' => $repairSparepart->name,
-                'repair_id' => $repairSparepart->repair_id
-            ]);
-
             // Update stok jika in_store
-            if ($validated['source'] === 'in_store' && !empty($validated['sparepart_id'])) {
+            if ($validated['source'] === 'in_store' && $validated['sparepart_id']) {
                 $sparepart = \App\Models\Sparepart::find($validated['sparepart_id']);
                 if ($sparepart) {
                     $sparepart->decrement('stock', $validated['quantity']);
-                    Log::info('Stock decremented for new sparepart: ' . $validated['sparepart_id']);
                 }
             }
 
-            DB::commit();
-
-            Log::info('=== SPAREPART ADDED SUCCESSFULLY ===');
+            Log::info('Sparepart added successfully', ['repair_sparepart_id' => $repairSparepart->id]);
 
             return response()->json([
                 'success' => true,
@@ -247,56 +233,14 @@ class RepairController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            DB::rollBack();
-            
-            Log::error('=== ERROR ADDING SPAREPART ===');
-            Log::error('Error message: ' . $e->getMessage());
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            Log::error('Request data: ', $request->all());
+            Log::error('Error adding sparepart: ' . $e->getMessage(), [
+                'repair_id' => $id,
+                'request_data' => $request->all()
+            ]);
             
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to save sparepart: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Remove sparepart from repair
-     */
-    public function removeSparepart($repairId, $sparepartId)
-    {
-        DB::beginTransaction();
-        try {
-            $repairSparepart = \App\Models\RepairSparepart::where('repair_id', $repairId)
-                ->where('id', $sparepartId)
-                ->firstOrFail();
-
-            // Kembalikan stok jika in_store
-            if ($repairSparepart->source === 'in_store' && $repairSparepart->sparepart_id) {
-                $sparepart = \App\Models\Sparepart::find($repairSparepart->sparepart_id);
-                if ($sparepart) {
-                    $sparepart->increment('stock', $repairSparepart->quantity);
-                }
-            }
-
-            $repairSparepart->delete();
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Sparepart removed successfully!'
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            
-            Log::error('Error removing sparepart: ' . $e->getMessage());
-            
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to remove sparepart: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -37,10 +37,10 @@ class HomeController extends Controller
 
         // If the DB has technician_id column, use it; otherwise fall back to the legacy 'technician' string
         if (Schema::hasColumn('repairs', 'technician_id')) {
-            // Current jobs assigned to this technician (in_progress)
-            $currentJobs = Repair::with('user','payment','technicianUser')
+            // Current jobs assigned to this technician (in_progress, diagnosed, waiting_parts)
+            $currentJobs = Repair::with('user','payment','technicianUser','repairSpareparts')
                 ->where('technician_id', $user->id)
-                ->where('status', 'in_progress')
+                ->whereIn('status', ['in_progress', 'diagnosed', 'waiting_parts'])
                 ->get();
 
             // Available jobs not yet claimed
@@ -50,18 +50,16 @@ class HomeController extends Controller
                 ->get();
 
             // Completed or other jobs for history
-            $otherJobs = Repair::with('user','payment','technicianUser')
-                ->where(function ($q) use ($user) {
-                    $q->where('status', 'finished')
-                      ->orWhere('technician_id', $user->id);
-                })
+            $otherJobs = Repair::with('user','payment','technicianUser','repairSpareparts')
+                ->where('technician_id', $user->id)
+                ->whereIn('status', ['finished', 'cancelled'])
                 ->orderByDesc('updated_at')
                 ->get();
         } else {
             // Legacy fallback: technician stored as name in 'technician' column
-            $currentJobs = Repair::with('user','payment')
+            $currentJobs = Repair::with('user','payment','repairSpareparts')
                 ->where('technician', $user->name)
-                ->where('status', 'in_progress')
+                ->whereIn('status', ['in_progress', 'diagnosed', 'waiting_parts'])
                 ->get();
 
             $availableJobs = Repair::with('user','payment')
@@ -71,22 +69,19 @@ class HomeController extends Controller
                 ->where('status', 'pending')
                 ->get();
 
-            $otherJobs = Repair::with('user','payment')
-                ->where(function ($q) use ($user) {
-                    $q->where('status', 'finished')
-                      ->orWhere('technician', $user->name);
-                })
+            $otherJobs = Repair::with('user','payment','repairSpareparts')
+                ->where('technician', $user->name)
+                ->whereIn('status', ['finished', 'cancelled'])
                 ->orderByDesc('updated_at')
                 ->get();
         }
 
-        return view('staff.technician', compact('currentJobs', 'availableJobs', 'otherJobs'));
+        return view('technician.dashboard', compact('currentJobs', 'availableJobs', 'otherJobs'));
     }
 
     public function adminDashboard()
     {
         return redirect()->route('admin.dashboard');
-        
     }
 
     public function dashboardRedirect()
@@ -101,7 +96,7 @@ class HomeController extends Controller
             case 'technician':
                 return redirect()->route('technician.dashboard');
             case 'admin':
-                return redirect()->route('admin.dashboard'); // Ini sudah benar
+                return redirect()->route('admin.dashboard'); 
             default:
                 return redirect('/'); 
         }

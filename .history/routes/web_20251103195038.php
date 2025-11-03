@@ -105,34 +105,23 @@ Route::prefix('technician')->middleware(['auth', 'role:technician'])->group(func
     // Dashboard
     Route::get('/dashboard', [TechnicianController::class, 'dashboard'])->name('technician.dashboard');
     
-    Route::post('/repairs/{id}/spareparts', [RepairController::class, 'addSparepart'])
-        ->name('technician.repairs.add-sparepart');
-        
-    Route::get('/repairs/{id}/spareparts', [TechnicianController::class, 'getRepairSpareparts'])
-        ->name('technician.repairs.spareparts');
-
-        
-    
     // Job Management
     Route::post('/claim/{id}', [TechnicianController::class, 'claimJob'])->name('technician.claim');
-    Route::post('/jobs/{id}/update', [TechnicianController::class, 'updateJob'])->name('technician.jobs.update');
+    Route::post('/jobs/{id}/update', [RepairController::class, 'updateJob'])->name('technician.jobs.update');
     
-    // Spareparts - FIXED ROUTES
+    // Spareparts
     Route::get('/spareparts/search', [TechnicianController::class, 'searchSpareparts'])->name('technician.spareparts.search');
     Route::get('/repairs/{id}/spareparts', [TechnicianController::class, 'getRepairSpareparts'])->name('technician.repairs.spareparts');
     
-    Route::post('/repairs/{id}/spareparts', [RepairController::class, 'addSparepart'])->name('technician.repairs.add-sparepart');
-    
-    // Route untuk update sparepart field
+    // 🔥 NEW: Route untuk update sparepart field
     Route::post('/repairs/{id}/update-sparepart-field', [TechnicianController::class, 'updateSparepartField'])
         ->name('technician.repairs.update-sparepart-field');
 });
 
-// Route untuk remove sparepart (global dengan middleware technician)
+// Sparepart operations for technician
 Route::middleware(['auth', 'role:technician'])->group(function () {
+    Route::post('/repairs/{id}/spareparts', [RepairController::class, 'addSparepart'])->name('repairs.addSparepart');
     Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
-        ->name('repairs.spareparts.remove');
-            Route::delete('/repairs/{repairId}/spareparts/{sparepartId}', [RepairController::class, 'removeSparepart'])
         ->name('repairs.spareparts.remove');
 });
 
