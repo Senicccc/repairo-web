@@ -22,14 +22,6 @@ class RepairController extends Controller
     }
 
     /**
-     * Show the form for creating a new repair (cashier)
-     */
-    public function create()
-    {
-        return view('cashier.repairs.create');
-    }
-
-    /**
      * Store new repair record (linked by phone number)
      */
     public function store(Request $request)
@@ -69,7 +61,7 @@ class RepairController extends Controller
         $repair->cost = $validated['cost'] ?? null;
         $repair->save();
 
-        return redirect()->route('cashier.dashboard')->with('success', 'Repair record created successfully.');
+        return redirect()->route('cashier.index')->with('success', 'Repair record created successfully.');
     }
 
 

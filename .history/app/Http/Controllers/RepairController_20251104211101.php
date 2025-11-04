@@ -18,15 +18,7 @@ class RepairController extends Controller
     public function index()
     {
         $repairs = Repair::with(['user', 'payment'])->get();
-        return view('cashier.index', compact('repairs'));
-    }
-
-    /**
-     * Show the form for creating a new repair (cashier)
-     */
-    public function create()
-    {
-        return view('cashier.repairs.create');
+        return view('cashier', compact('repairs'));
     }
 
     /**

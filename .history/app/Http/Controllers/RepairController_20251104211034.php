@@ -18,15 +18,7 @@ class RepairController extends Controller
     public function index()
     {
         $repairs = Repair::with(['user', 'payment'])->get();
-        return view('cashier.index', compact('repairs'));
-    }
-
-    /**
-     * Show the form for creating a new repair (cashier)
-     */
-    public function create()
-    {
-        return view('cashier.repairs.create');
+        return view('staff.cashier', compact('repairs'));
     }
 
     /**
@@ -307,5 +299,4 @@ class RepairController extends Controller
                 'message' => 'Failed to remove sparepart: ' . $e->getMessage()
             ], 500);
         }
-    }
     }

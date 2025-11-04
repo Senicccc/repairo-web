@@ -76,7 +76,7 @@ class HomeController extends Controller
                 ->get();
         }
 
-        return view('technician.index', compact('currentJobs', 'availableJobs', 'otherJobs'));
+        return view('technician.dashboard', compact('currentJobs', 'availableJobs', 'otherJobs'));
     }
 
     public function adminDashboard()

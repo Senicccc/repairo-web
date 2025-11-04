@@ -26,7 +26,7 @@ class RepairController extends Controller
      */
     public function create()
     {
-        return view('cashier.repairs.create');
+        return view('cashier.repairs.create'); // Make sure this Blade view exists
     }
 
     /**

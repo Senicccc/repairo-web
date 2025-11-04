@@ -22,14 +22,6 @@ class RepairController extends Controller
     }
 
     /**
-     * Show the form for creating a new repair (cashier)
-     */
-    public function create()
-    {
-        return view('cashier.repairs.create');
-    }
-
-    /**
      * Store new repair record (linked by phone number)
      */
     public function store(Request $request)

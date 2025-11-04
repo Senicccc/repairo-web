@@ -18,7 +18,7 @@ class RepairController extends Controller
     public function index()
     {
         $repairs = Repair::with(['user', 'payment'])->get();
-        return view('cashier.index', compact('repairs'));
+        return view('staff.cashier', compact('repairs'));
     }
 
     /**
@@ -26,7 +26,7 @@ class RepairController extends Controller
      */
     public function create()
     {
-        return view('cashier.repairs.create');
+        return view('cashier.repairs.create'); 
     }
 
     /**
@@ -308,4 +308,4 @@ class RepairController extends Controller
             ], 500);
         }
     }
-    }
+}
