@@ -634,6 +634,7 @@ document.getElementById('editPaymentForm')?.addEventListener('submit', async fun
 });
 
 // Loyalty Form Submission
+// Loyalty Form Submission - EXTREME DEBUGGING VERSION
 document.getElementById('editLoyaltyForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -641,6 +642,7 @@ document.getElementById('editLoyaltyForm')?.addEventListener('submit', async fun
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn.textContent;
     
+    // Collect form data
     const formData = {
         status: document.getElementById('editLoyaltyStatus').value,
         reward_type: document.getElementById('editLoyaltyType').value,
@@ -649,15 +651,19 @@ document.getElementById('editLoyaltyForm')?.addEventListener('submit', async fun
         _method: 'PUT'
     };
     
-    console.log('Submitting loyalty data:', formData);
+    console.log('🔍🔄 DEBUG - Starting loyalty update process...');
+    console.log('🔍🔄 DEBUG - Loyalty ID:', loyaltyId);
+    console.log('🔍🔄 DEBUG - Form Data:', formData);
     
     // Validation
     if (!formData.points_used || formData.points_used < 0) {
+        console.log('🔍❌ DEBUG - Validation failed: Invalid points');
         showAlert('❌ Please enter a valid points value', 'error');
         return;
     }
     
     if (!formData.reward_value) {
+        console.log('🔍❌ DEBUG - Validation failed: Empty reward value');
         showAlert('❌ Please enter a reward value', 'error');
         return;
     }
@@ -665,10 +671,24 @@ document.getElementById('editLoyaltyForm')?.addEventListener('submit', async fun
     // Show loading state
     submitBtn.textContent = 'Saving...';
     submitBtn.disabled = true;
+    console.log('🔍🔄 DEBUG - Button state: Loading...');
     
     try {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const response = await fetch(`/admin/loyalty/${loyaltyId}`, {
+        console.log('🔍🔄 DEBUG - CSRF Token found:', csrfToken ? 'Yes' : 'No');
+        
+        const url = `/admin/loyalty/${loyaltyId}`;
+        console.log('🔍🔄 DEBUG - Request URL:', url);
+        console.log('🔍🔄 DEBUG - Request Method: POST (with _method: PUT)');
+        console.log('🔍🔄 DEBUG - Request Headers:', {
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        });
+        console.log('🔍🔄 DEBUG - Request Body:', JSON.stringify(formData));
+        
+        // Send request
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'X-CSRF-TOKEN': csrfToken,
@@ -678,15 +698,33 @@ document.getElementById('editLoyaltyForm')?.addEventListener('submit', async fun
             body: JSON.stringify(formData)
         });
 
-        const data = await response.json();
+        console.log('🔍🔄 DEBUG - Response received');
+        console.log('🔍🔄 DEBUG - Response Status:', response.status);
+        console.log('🔍🔄 DEBUG - Response OK:', response.ok);
+        console.log('🔍🔄 DEBUG - Response Headers:', Object.fromEntries(response.headers.entries()));
+        
+        // Get response text first for debugging
+        const responseText = await response.text();
+        console.log('🔍🔄 DEBUG - Raw Response Text:', responseText);
+        
+        let data;
+        try {
+            data = JSON.parse(responseText);
+            console.log('🔍🔄 DEBUG - Parsed Response Data:', data);
+        } catch (parseError) {
+            console.error('🔍❌ DEBUG - JSON Parse Error:', parseError);
+            console.error('🔍❌ DEBUG - Raw response that failed to parse:', responseText);
+            throw new Error('Invalid JSON response from server');
+        }
 
         if (data.success) {
-            console.log('Loyalty reward updated successfully:', data);
+            console.log('🔍✅ DEBUG - SUCCESS: Loyalty reward updated successfully');
             showAlert('✅ Loyalty reward updated successfully!', 'success');
             closeLoyaltyModal();
             
             // Refresh the loyalty section after a delay
             setTimeout(() => {
+                console.log('🔍🔄 DEBUG - Refreshing loyalty section...');
                 const loyaltyTab = document.querySelector('[onclick*="loyalty"]');
                 if (loyaltyTab) {
                     loyaltyTab.click();
@@ -694,15 +732,22 @@ document.getElementById('editLoyaltyForm')?.addEventListener('submit', async fun
             }, 1000);
             
         } else {
-            throw new Error(data.message || 'Failed to update loyalty reward');
+            console.error('🔍❌ DEBUG - SERVER ERROR:', data);
+            const errorMessage = data.message || 
+                               (data.errors ? JSON.stringify(data.errors) : 'Failed to update loyalty reward');
+            throw new Error(errorMessage);
         }
     } catch (error) {
-        console.error('Error updating loyalty reward:', error);
+        console.error('🔍❌ DEBUG - FETCH ERROR:', error);
+        console.error('🔍❌ DEBUG - Error name:', error.name);
+        console.error('🔍❌ DEBUG - Error message:', error.message);
+        console.error('🔍❌ DEBUG - Error stack:', error.stack);
         showAlert('❌ Error: ' + error.message, 'error');
     } finally {
         // Restore button state
         submitBtn.textContent = originalBtnText;
         submitBtn.disabled = false;
+        console.log('🔍🔄 DEBUG - Button state restored');
     }
 });
 

@@ -71,7 +71,6 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/loyalty', [AdminController::class, 'adminLoyalty'])->name('admin.loyalty.index');
     Route::delete('/loyalty/{id}', [AdminController::class, 'deleteLoyalty'])->name('admin.loyalty.destroy');
     Route::put('/loyalty/{id}', [AdminController::class, 'updateLoyalty'])->name('admin.loyalty.update');
-
 });
 
 // ============================================================

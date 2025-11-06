@@ -55,6 +55,34 @@ class AdminController extends Controller
         }
     }
 
+    // Admin Repairs List
+    public function adminRepairs()
+    {
+        $repairs = Repair::with(['user', 'payment'])->get();
+        return view('admin.repairs', compact('repairs'));
+    }
+
+    // Admin Payments List
+    public function adminPayments()
+    {
+        $payments = Payment::with(['repair.user'])->get();
+        return view('admin.payments', compact('payments'));
+    }
+
+    // Admin Loyalty List
+    public function adminLoyalty()
+    {
+        $rewards = LoyaltyReward::with('user')->get();
+        return view('admin.loyalty', compact('rewards'));
+    }
+
+    // Admin Spareparts List
+    public function adminSpareparts()
+    {
+        $spareparts = Sparepart::paginate(20);
+        return view('admin.spareparts', compact('spareparts'));
+    }
+
     // Delete Repair
     public function deleteRepair($id)
     {
@@ -68,7 +96,6 @@ class AdminController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            Log::error('Error deleting repair: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete repair: ' . $e->getMessage()
@@ -76,31 +103,27 @@ class AdminController extends Controller
         }
     }
 
-    // Update Repair - PERBAIKAN: Gunakan PUT method
+    // Update Repair
     public function updateRepair(Request $request, $id)
     {
         try {
             $repair = Repair::findOrFail($id);
 
-            // Validasi yang lebih spesifik
-            $validated = $request->validate([
+            $data = $request->validate([
                 'status' => 'required|string|in:pending,in_progress,finished,cancelled',
                 'technician' => 'nullable|string|max:255',
                 'cost' => 'nullable|numeric|min:0',
             ]);
 
-            $repair->update($validated);
-
-            Log::info('Repair updated successfully:', ['repair_id' => $id, 'data' => $validated]);
+            $repair->update($data);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Repair updated successfully',
-                'repair' => $repair->load('user', 'payment')
+                'repair' => $repair
             ]);
             
         } catch (\Exception $e) {
-            Log::error('Error updating repair: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update repair: ' . $e->getMessage()
@@ -121,7 +144,6 @@ class AdminController extends Controller
             ]);
             
         } catch (\Exception $e) {
-            Log::error('Error deleting payment: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to delete payment: ' . $e->getMessage()
@@ -129,26 +151,27 @@ class AdminController extends Controller
         }
     }
 
-    // Update Payment - PERBAIKAN: Gunakan PUT method
+    // Update Payment
     public function updatePayment(Request $request, $id)
     {
         try {
             $payment = Payment::findOrFail($id);
 
-            $validated = $request->validate([
+            $data = $request->validate([
                 'status' => 'required|string|in:unpaid,paid',
                 'payment_method' => 'required|string|in:cash,transfer,ewallet',
                 'amount' => 'required|numeric|min:0',
             ]);
 
-            Log::info('Updating payment:', $validated);
+            // Debug data sebelum update
+            Log::info('Updating payment:', $data);
             
-            $payment->update($validated);
+            $payment->update($data);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Payment updated successfully',
-                'payment' => $payment->load('repair.user')
+                'payment' => $payment
             ]);
             
         } catch (\Exception $e) {
@@ -161,55 +184,55 @@ class AdminController extends Controller
     }
 
     // Delete Loyalty
-    public function deleteLoyalty($id)
-    {
-        try {
-            $loyalty = LoyaltyReward::findOrFail($id);
-            $loyalty->delete();
+public function deleteLoyalty($id)
+{
+    try {
+        $loyalty = LoyaltyReward::findOrFail($id);
+        $loyalty->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Loyalty reward deleted successfully'
-            ]);
-            
-        } catch (\Exception $e) {
-            Log::error('Error deleting loyalty: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to delete loyalty reward: ' . $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Loyalty reward deleted successfully'
+        ]);
+        
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete loyalty reward: ' . $e->getMessage()
+        ], 500);
     }
+}
 
-    // Update Loyalty - PERBAIKAN: Gunakan PUT method
-    public function updateLoyalty(Request $request, $id)
-    {
-        try {
-            $loyalty = LoyaltyReward::findOrFail($id);
+// Update Loyalty
+public function updateLoyalty(Request $request, $id)
+{
+    try {
+        $loyalty = LoyaltyReward::findOrFail($id);
 
-            $validated = $request->validate([
-                'status' => 'required|string|in:claimed,used',
-                'reward_type' => 'required|string|in:discount,gift',
-                'points_used' => 'required|integer|min:0',
-                'reward_value' => 'required|string|max:255',
-            ]);
+        $data = $request->validate([
+            'status' => 'required|string|in:claimed,used,expired',
+            'reward_type' => 'required|string|in:discount,gift',
+            'points_used' => 'required|integer|min:0',
+            'reward_value' => 'required|string|max:255',
+        ]);
 
-            Log::info('Updating loyalty reward:', $validated);
-            
-            $loyalty->update($validated);
+        // Debug data sebelum update
+        \Log::info('Updating loyalty reward:', $data);
+        
+        $loyalty->update($data);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Loyalty reward updated successfully',
-                'loyalty' => $loyalty->load('user')
-            ]);
-            
-        } catch (\Exception $e) {
-            Log::error('Error updating loyalty reward: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update loyalty reward: ' . $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Loyalty reward updated successfully',
+            'loyalty' => $loyalty
+        ]);
+        
+    } catch (\Exception $e) {
+        \Log::error('Error updating loyalty reward: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update loyalty reward: ' . $e->getMessage()
+        ], 500);
     }
+}
 }

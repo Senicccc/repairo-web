@@ -188,7 +188,7 @@ class AdminController extends Controller
             $loyalty = LoyaltyReward::findOrFail($id);
 
             $validated = $request->validate([
-                'status' => 'required|string|in:claimed,used',
+                'status' => 'required|string|in:claimed,used,expired',
                 'reward_type' => 'required|string|in:discount,gift',
                 'points_used' => 'required|integer|min:0',
                 'reward_value' => 'required|string|max:255',

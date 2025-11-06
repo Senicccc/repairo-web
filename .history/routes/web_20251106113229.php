@@ -67,11 +67,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     // Spareparts Management
     Route::get('/spareparts', [AdminController::class, 'adminSpareparts'])->name('admin.spareparts.index');
 
-    // Loyalty Management
+        // Loyalty Management
     Route::get('/loyalty', [AdminController::class, 'adminLoyalty'])->name('admin.loyalty.index');
     Route::delete('/loyalty/{id}', [AdminController::class, 'deleteLoyalty'])->name('admin.loyalty.destroy');
     Route::put('/loyalty/{id}', [AdminController::class, 'updateLoyalty'])->name('admin.loyalty.update');
-
 });
 
 // ============================================================

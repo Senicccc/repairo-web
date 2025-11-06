@@ -142,58 +142,9 @@
     </div>
 </div>
 
-{{-- GLOBAL EDIT MODAL FOR LOYALTY --}}
-<div id="editLoyaltyModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-lg w-full max-w-md p-6 relative">
-        <button type="button" id="closeLoyaltyModal" class="absolute top-3 right-3 text-gray-400 hover:text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-        
-        <h3 class="text-lg font-semibold mb-4">Edit Loyalty Reward</h3>
-        <form id="editLoyaltyForm">
-            @csrf
-            <input type="hidden" name="_method" value="PUT">
-            <input type="hidden" id="editLoyaltyId" name="loyalty_id">
-
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select id="editLoyaltyStatus" name="status" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <option value="claimed">Claimed</option>
-                    <option value="used">Used</option>
-                </select>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Reward Type</label>
-                <select id="editLoyaltyType" name="reward_type" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                    <option value="discount">Discount</option>
-                    <option value="gift">Gift</option>
-                </select>
-            </div>
-
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Points Used</label>
-                <input type="number" id="editLoyaltyPoints" name="points_used" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter points used">
-            </div>
-
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Reward Value</label>
-                <input type="text" id="editLoyaltyValue" name="reward_value" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="Enter reward value">
-            </div>
-
-            <div class="flex justify-end gap-3">
-                <button type="button" id="cancelLoyaltyEdit" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 transition duration-200">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200">Save Changes</button>
-            </div>
-        </form>
-    </div>
-</div>
-
 <script>
 // =============================================
-// GLOBAL ADMIN FUNCTIONS
+// GLOBAL ADMIN FUNCTIONS - PERBAIKAN LENGKAP
 // =============================================
 
 console.log('🔄 ADMIN DASHBOARD SCRIPT LOADED');
@@ -203,88 +154,96 @@ function showSection(section, btn) {
     console.log('Loading section:', section);
     
     fetch(`/admin/section/${section}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text();
-        })
+        .then(response => response.text())
         .then(html => {
             const content = document.getElementById('content-area');
-            content.innerHTML = html;
+            content.classList.add('opacity-0', 'translate-y-1');
+            setTimeout(() => {
+                content.innerHTML = html;
+                content.classList.remove('opacity-0', 'translate-y-1');
+                content.classList.add('opacity-100', 'translate-y-0');
+                
+                // Re-initialize event listeners setelah content berubah
+                initializeEventListeners();
+            }, 150);
             updateActiveTab(btn);
         })
-        .catch(error => {
-            console.error('Error loading section:', error);
-            showAlert('Error loading section: ' + error.message, 'error');
-        });
+        .catch(error => console.error('Error loading section:', error));
 }
 
 function updateActiveTab(activeBtn) {
+    // Remove active class dari semua tab
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.remove('bg-blue-600', 'text-white', 'shadow-sm');
         btn.classList.add('text-gray-600', 'hover:bg-blue-50', 'hover:text-blue-600');
     });
     
+    // Add active class ke tab yang aktif
     activeBtn.classList.remove('text-gray-600', 'hover:bg-blue-50', 'hover:text-blue-600');
     activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');
 }
 
 // =============================================
-// EVENT DELEGATION UNTUK SEMUA BUTTONS
+// EVENT LISTENERS GLOBAL - PERBAIKAN
 // =============================================
 
-document.addEventListener('click', function(e) {
-    // Repair Buttons
-    if (e.target.classList.contains('edit-repair')) {
-        e.preventDefault();
-        const repairId = e.target.getAttribute('data-id');
-        console.log('✏️ Edit repair clicked:', repairId);
-        openEditModal(repairId, e.target.closest('tr'));
-    }
+function initializeEventListeners() {
+    console.log('🔄 Initializing event listeners...');
     
-    if (e.target.classList.contains('delete-repair')) {
-        e.preventDefault();
-        const repairId = e.target.getAttribute('data-id');
-        console.log('🗑️ Delete repair clicked:', repairId);
-        deleteRepair(repairId, e.target.closest('tr'));
-    }
-    
-    // Payment Buttons
-    if (e.target.classList.contains('edit-payment')) {
-        e.preventDefault();
-        const paymentId = e.target.getAttribute('data-id');
-        console.log('✏️ Edit payment clicked:', paymentId);
-        openPaymentEditModal(paymentId, e.target.closest('tr'));
-    }
-    
-    if (e.target.classList.contains('delete-payment')) {
-        e.preventDefault();
-        const paymentId = e.target.getAttribute('data-id');
-        console.log('🗑️ Delete payment clicked:', paymentId);
-        deletePayment(paymentId, e.target.closest('tr'));
-    }
-    
-    // Loyalty Buttons
-    if (e.target.classList.contains('edit-loyalty')) {
-        e.preventDefault();
-        const loyaltyId = e.target.getAttribute('data-id');
-        console.log('✏️ Edit loyalty clicked:', loyaltyId);
-        openLoyaltyEditModal(loyaltyId, e.target.closest('tr'));
-    }
-    
-    if (e.target.classList.contains('delete-loyalty')) {
-        e.preventDefault();
-        const loyaltyId = e.target.getAttribute('data-id');
-        console.log('🗑️ Delete loyalty clicked:', loyaltyId);
-        deleteLoyalty(loyaltyId, e.target.closest('tr'));
-    }
-});
+    // Event delegation untuk SEMUA buttons
+    document.addEventListener('click', function(e) {
+        // Repair Buttons
+        if (e.target.classList.contains('edit-repair')) {
+            e.preventDefault();
+            const repairId = e.target.getAttribute('data-id');
+            console.log('✏️ Edit repair clicked:', repairId);
+            openEditModal(repairId, e.target.closest('tr'));
+        }
+        
+        if (e.target.classList.contains('delete-repair')) {
+            e.preventDefault();
+            const repairId = e.target.getAttribute('data-id');
+            console.log('🗑️ Delete repair clicked:', repairId);
+            deleteRepair(repairId, e.target.closest('tr'));
+        }
+        
+        // Payment Buttons
+        if (e.target.classList.contains('edit-payment')) {
+            e.preventDefault();
+            const paymentId = e.target.getAttribute('data-id');
+            console.log('✏️ Edit payment clicked:', paymentId);
+            openPaymentEditModal(paymentId, e.target.closest('tr'));
+        }
+        
+        if (e.target.classList.contains('delete-payment')) {
+            e.preventDefault();
+            const paymentId = e.target.getAttribute('data-id');
+            console.log('🗑️ Delete payment clicked:', paymentId);
+            deletePayment(paymentId, e.target.closest('tr'));
+        }
+        
+        // Loyalty Buttons
+        if (e.target.classList.contains('edit-loyalty')) {
+            e.preventDefault();
+            const loyaltyId = e.target.getAttribute('data-id');
+            console.log('✏️ Edit loyalty clicked:', loyaltyId);
+            openLoyaltyEditModal(loyaltyId, e.target.closest('tr'));
+        }
+        
+        if (e.target.classList.contains('delete-loyalty')) {
+            e.preventDefault();
+            const loyaltyId = e.target.getAttribute('data-id');
+            console.log('🗑️ Delete loyalty clicked:', loyaltyId);
+            deleteLoyalty(loyaltyId, e.target.closest('tr'));
+        }
+    });
+}
 
 // =============================================
-// REPAIR FUNCTIONS
+// REPAIR FUNCTIONS - PERBAIKAN
 // =============================================
 
+// Open Edit Modal untuk Repair
 function openEditModal(repairId, row) {
     if (!row) {
         console.error('Row not found');
@@ -297,10 +256,10 @@ function openEditModal(repairId, row) {
         return;
     }
     
-    // Get current values - adjust indexes based on your table structure
-    const statusCell = cells[4]; // Status column
-    const technicianCell = cells[5]; // Technician column  
-    const costCell = cells[6]; // Cost column
+    // Get current values - sesuaikan dengan index kolom Anda
+    const statusCell = cells[4]; // Adjust index sesuai struktur tabel
+    const technicianCell = cells[5]; // Adjust index
+    const costCell = cells[6]; // Adjust index
     
     const currentStatus = statusCell.querySelector('.status-badge')?.textContent.trim().toLowerCase().replace(/\s+/g, '_') || 'pending';
     const currentTechnician = technicianCell.textContent.trim() === '-' ? '' : technicianCell.textContent.trim();
@@ -319,6 +278,7 @@ function openEditModal(repairId, row) {
     document.body.style.overflow = 'hidden';
 }
 
+// Delete Repair - PERBAIKAN: Gunakan method DELETE yang benar
 async function deleteRepair(repairId, row) {
     if (!confirm('Are you sure you want to delete this repair? This action cannot be undone.')) {
         return;
@@ -351,10 +311,52 @@ async function deleteRepair(repairId, row) {
     }
 }
 
+// Update Repair - PERBAIKAN: Gunakan PUT method dengan JSON
+async function updateRepair(formData) {
+    const repairId = formData.get('repair_id');
+    
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const response = await fetch(`/admin/repairs/${repairId}`, {
+            method: 'PUT',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status: formData.get('status'),
+                technician: formData.get('technician'),
+                cost: formData.get('cost')
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            console.log('Repair updated successfully:', data);
+            showAlert('✅ Repair updated successfully!', 'success');
+            closeModal();
+            
+            // Refresh section untuk update data terbaru
+            const activeTab = document.querySelector('.tab-btn.bg-blue-600');
+            if (activeTab) {
+                showSection('repairs', activeTab);
+            }
+        } else {
+            throw new Error(data.message || 'Failed to update repair');
+        }
+    } catch (error) {
+        console.error('Error updating repair:', error);
+        showAlert('❌ Error: ' + error.message, 'error');
+    }
+}
+
 // =============================================
-// PAYMENT FUNCTIONS
+// PAYMENT FUNCTIONS - PERBAIKAN
 // =============================================
 
+// Open Payment Edit Modal
 function openPaymentEditModal(paymentId, row) {
     if (!row) {
         console.error('Row not found');
@@ -367,10 +369,10 @@ function openPaymentEditModal(paymentId, row) {
         return;
     }
     
-    // Get current values - adjust indexes based on your table structure
-    const statusCell = cells[3]; // Status column
-    const methodCell = cells[4]; // Method column  
-    const amountCell = cells[5]; // Amount column
+    // Get current values - sesuaikan index
+    const statusCell = cells[3]; // Adjust index
+    const methodCell = cells[4]; // Adjust index  
+    const amountCell = cells[5]; // Adjust index
     
     const currentStatus = statusCell.querySelector('.status-badge')?.textContent.trim().toLowerCase() || 'unpaid';
     const currentMethod = methodCell.textContent.trim().toLowerCase().replace(/\s+/g, '_') || 'cash';
@@ -389,6 +391,7 @@ function openPaymentEditModal(paymentId, row) {
     document.body.style.overflow = 'hidden';
 }
 
+// Delete Payment - PERBAIKAN
 async function deletePayment(paymentId, row) {
     if (!confirm('Are you sure you want to delete this payment? This action cannot be undone.')) {
         return;
@@ -421,10 +424,52 @@ async function deletePayment(paymentId, row) {
     }
 }
 
+// Update Payment - PERBAIKAN
+async function updatePayment(formData) {
+    const paymentId = formData.get('payment_id');
+    
+    try {
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const response = await fetch(`/admin/payments/${paymentId}`, {
+            method: 'PUT',
+            headers: {
+                'X-CSRF-TOKEN': csrfToken,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status: formData.get('status'),
+                payment_method: formData.get('payment_method'),
+                amount: formData.get('amount')
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            console.log('Payment updated successfully:', data);
+            showAlert('✅ Payment updated successfully!', 'success');
+            closePaymentModal();
+            
+            // Refresh section
+            const activeTab = document.querySelector('.tab-btn.bg-blue-600');
+            if (activeTab) {
+                showSection('payments', activeTab);
+            }
+        } else {
+            throw new Error(data.message || 'Failed to update payment');
+        }
+    } catch (error) {
+        console.error('Error updating payment:', error);
+        showAlert('❌ Error: ' + error.message, 'error');
+    }
+}
+
 // =============================================
-// LOYALTY FUNCTIONS
+// LOYALTY FUNCTIONS - PERBAIKAN
 // =============================================
 
+// Open Loyalty Edit Modal
 function openLoyaltyEditModal(loyaltyId, row) {
     if (!row) {
         console.error('Row not found');
@@ -432,36 +477,23 @@ function openLoyaltyEditModal(loyaltyId, row) {
     }
     
     const cells = row.querySelectorAll('td');
-    if (cells.length < 8) {
+    if (cells.length < 6) {
         console.error('Not enough cells in row');
         return;
     }
     
-    // Get current values - adjust indexes based on your table structure
-    // [ID, User, Reward Type, Reward Value, Points Used, Code, Status, Actions]
-    const statusCell = cells[6]; // Status column
-    const typeCell = cells[2];   // Reward Type column
-    const pointsCell = cells[4]; // Points Used column
-    const valueCell = cells[3];  // Reward Value column
+    // Get current values - sesuaikan index
+    const statusCell = cells[4]; // Adjust index
+    const typeCell = cells[2]; // Adjust index
+    const pointsCell = cells[3]; // Adjust index
+    const valueCell = cells[5]; // Adjust index
     
-    // Get values from cells
     const currentStatus = statusCell.querySelector('.status-badge')?.textContent.trim().toLowerCase() || 'claimed';
     const currentType = typeCell.textContent.trim().toLowerCase() || 'discount';
     const currentPoints = pointsCell.textContent.trim().replace(/[^0-9]/g, '') || '';
+    const currentValue = valueCell.textContent.trim() || '';
     
-    // Get reward value - handle currency format for discount
-    let currentValue = valueCell.textContent.trim();
-    if (currentType === 'discount' && currentValue.includes('Rp')) {
-        // Extract numeric value from currency format "Rp 50.000"
-        currentValue = currentValue.replace('Rp', '').replace(/\./g, '').trim();
-    }
-    
-    console.log('Current loyalty values:', { 
-        currentStatus, 
-        currentType, 
-        currentPoints, 
-        currentValue 
-    });
+    console.log('Current loyalty values:', { currentStatus, currentType, currentPoints, currentValue });
     
     // Populate form
     document.getElementById('editLoyaltyId').value = loyaltyId;
@@ -475,6 +507,7 @@ function openLoyaltyEditModal(loyaltyId, row) {
     document.body.style.overflow = 'hidden';
 }
 
+// Delete Loyalty - PERBAIKAN
 async function deleteLoyalty(loyaltyId, row) {
     if (!confirm('Are you sure you want to delete this loyalty reward? This action cannot be undone.')) {
         return;
@@ -507,175 +540,25 @@ async function deleteLoyalty(loyaltyId, row) {
     }
 }
 
-// =============================================
-// FORM SUBMISSION HANDLERS
-// =============================================
-
-// Repair Form Submission
-document.getElementById('editRepairForm')?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const repairId = document.getElementById('editRepairId').value;
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.textContent;
-    
-    const formData = {
-        status: document.getElementById('editStatus').value,
-        technician: document.getElementById('editTechnician').value,
-        cost: document.getElementById('editCost').value,
-        _method: 'PUT'
-    };
-    
-    console.log('Submitting repair data:', formData);
-    
-    // Show loading state
-    submitBtn.textContent = 'Saving...';
-    submitBtn.disabled = true;
-    
-    try {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const response = await fetch(`/admin/repairs/${repairId}`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            console.log('Repair updated successfully:', data);
-            showAlert('✅ Repair updated successfully!', 'success');
-            closeModal();
-            
-            // Refresh the repairs section after a delay
-            setTimeout(() => {
-                const repairTab = document.querySelector('[onclick*="repairs"]');
-                if (repairTab) {
-                    repairTab.click();
-                }
-            }, 1000);
-            
-        } else {
-            throw new Error(data.message || 'Failed to update repair');
-        }
-    } catch (error) {
-        console.error('Error updating repair:', error);
-        showAlert('❌ Error: ' + error.message, 'error');
-    } finally {
-        // Restore button state
-        submitBtn.textContent = originalBtnText;
-        submitBtn.disabled = false;
-    }
-});
-
-// Payment Form Submission
-document.getElementById('editPaymentForm')?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const paymentId = document.getElementById('editPaymentId').value;
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.textContent;
-    
-    const formData = {
-        status: document.getElementById('editPaymentStatus').value,
-        payment_method: document.getElementById('editPaymentMethod').value,
-        amount: document.getElementById('editPaymentAmount').value,
-        _method: 'PUT'
-    };
-    
-    console.log('Submitting payment data:', formData);
-    
-    // Show loading state
-    submitBtn.textContent = 'Saving...';
-    submitBtn.disabled = true;
-    
-    try {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const response = await fetch(`/admin/payments/${paymentId}`, {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': csrfToken,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            console.log('Payment updated successfully:', data);
-            showAlert('✅ Payment updated successfully!', 'success');
-            closePaymentModal();
-            
-            // Refresh the payments section after a delay
-            setTimeout(() => {
-                const paymentTab = document.querySelector('[onclick*="payments"]');
-                if (paymentTab) {
-                    paymentTab.click();
-                }
-            }, 1000);
-            
-        } else {
-            throw new Error(data.message || 'Failed to update payment');
-        }
-    } catch (error) {
-        console.error('Error updating payment:', error);
-        showAlert('❌ Error: ' + error.message, 'error');
-    } finally {
-        // Restore button state
-        submitBtn.textContent = originalBtnText;
-        submitBtn.disabled = false;
-    }
-});
-
-// Loyalty Form Submission
-document.getElementById('editLoyaltyForm')?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const loyaltyId = document.getElementById('editLoyaltyId').value;
-    const submitBtn = this.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.textContent;
-    
-    const formData = {
-        status: document.getElementById('editLoyaltyStatus').value,
-        reward_type: document.getElementById('editLoyaltyType').value,
-        points_used: parseInt(document.getElementById('editLoyaltyPoints').value),
-        reward_value: document.getElementById('editLoyaltyValue').value,
-        _method: 'PUT'
-    };
-    
-    console.log('Submitting loyalty data:', formData);
-    
-    // Validation
-    if (!formData.points_used || formData.points_used < 0) {
-        showAlert('❌ Please enter a valid points value', 'error');
-        return;
-    }
-    
-    if (!formData.reward_value) {
-        showAlert('❌ Please enter a reward value', 'error');
-        return;
-    }
-    
-    // Show loading state
-    submitBtn.textContent = 'Saving...';
-    submitBtn.disabled = true;
+// Update Loyalty - PERBAIKAN
+async function updateLoyalty(formData) {
+    const loyaltyId = formData.get('loyalty_id');
     
     try {
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         const response = await fetch(`/admin/loyalty/${loyaltyId}`, {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'X-CSRF-TOKEN': csrfToken,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(formData)
+            body: JSON.stringify({
+                status: formData.get('status'),
+                reward_type: formData.get('reward_type'),
+                points_used: formData.get('points_used'),
+                reward_value: formData.get('reward_value')
+            })
         });
 
         const data = await response.json();
@@ -685,86 +568,92 @@ document.getElementById('editLoyaltyForm')?.addEventListener('submit', async fun
             showAlert('✅ Loyalty reward updated successfully!', 'success');
             closeLoyaltyModal();
             
-            // Refresh the loyalty section after a delay
-            setTimeout(() => {
-                const loyaltyTab = document.querySelector('[onclick*="loyalty"]');
-                if (loyaltyTab) {
-                    loyaltyTab.click();
-                }
-            }, 1000);
-            
+            // Refresh section
+            const activeTab = document.querySelector('.tab-btn.bg-blue-600');
+            if (activeTab) {
+                showSection('loyalty', activeTab);
+            }
         } else {
             throw new Error(data.message || 'Failed to update loyalty reward');
         }
     } catch (error) {
         console.error('Error updating loyalty reward:', error);
         showAlert('❌ Error: ' + error.message, 'error');
-    } finally {
-        // Restore button state
-        submitBtn.textContent = originalBtnText;
-        submitBtn.disabled = false;
     }
+}
+
+// =============================================
+// MODAL HANDLERS - PERBAIKAN
+// =============================================
+
+// Repair Modal
+document.getElementById('editRepairForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    await updateRepair(formData);
 });
 
-// =============================================
-// MODAL CONTROLS
-// =============================================
+// Payment Modal  
+document.getElementById('editPaymentForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    await updatePayment(formData);
+});
 
-// Repair Modal Controls
-function closeModal() {
-    document.getElementById('editModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
+// Loyalty Modal
+document.getElementById('editLoyaltyForm')?.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    await updateLoyalty(formData);
+});
 
+// Modal close handlers
 document.getElementById('closeModal')?.addEventListener('click', closeModal);
 document.getElementById('cancelEdit')?.addEventListener('click', closeModal);
-
-// Payment Modal Controls
-function closePaymentModal() {
-    document.getElementById('editPaymentModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
 document.getElementById('closePaymentModal')?.addEventListener('click', closePaymentModal);
 document.getElementById('cancelPaymentEdit')?.addEventListener('click', closePaymentModal);
-
-// Loyalty Modal Controls
-function closeLoyaltyModal() {
-    document.getElementById('editLoyaltyModal').classList.add('hidden');
-    document.body.style.overflow = 'auto';
-}
-
 document.getElementById('closeLoyaltyModal')?.addEventListener('click', closeLoyaltyModal);
 document.getElementById('cancelLoyaltyEdit')?.addEventListener('click', closeLoyaltyModal);
 
-// Close modals when clicking on background
+// Close modal on background click
 document.addEventListener('click', function(e) {
     if (e.target.id === 'editModal') closeModal();
     if (e.target.id === 'editPaymentModal') closePaymentModal();
     if (e.target.id === 'editLoyaltyModal') closeLoyaltyModal();
 });
 
-// Close modals with Escape key
+// Close modal on Escape key
 document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
-        closeModal();
-        closePaymentModal();
-        closeLoyaltyModal();
+        if (!document.getElementById('editModal').classList.contains('hidden')) closeModal();
+        if (!document.getElementById('editPaymentModal').classList.contains('hidden')) closePaymentModal();
+        if (!document.getElementById('editLoyaltyModal').classList.contains('hidden')) closeLoyaltyModal();
     }
 });
+
+function closeModal() {
+    document.getElementById('editModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function closePaymentModal() {
+    document.getElementById('editPaymentModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
+
+function closeLoyaltyModal() {
+    document.getElementById('editLoyaltyModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+}
 
 // =============================================
 // HELPER FUNCTIONS
 // =============================================
 
 function showAlert(message, type = 'info') {
-    // Remove existing alerts
-    const existingAlerts = document.querySelectorAll('.custom-alert');
-    existingAlerts.forEach(alert => alert.remove());
-    
-    // Create alert element
+    // Buat alert element
     const alert = document.createElement('div');
-    alert.className = `custom-alert fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg text-white font-medium ${
+    alert.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg text-white font-medium ${
         type === 'success' ? 'bg-green-500' : 
         type === 'error' ? 'bg-red-500' : 'bg-blue-500'
     }`;
@@ -772,7 +661,7 @@ function showAlert(message, type = 'info') {
     
     document.body.appendChild(alert);
     
-    // Remove alert after 3 seconds
+    // Hapus alert setelah 3 detik
     setTimeout(() => {
         alert.remove();
     }, 3000);
@@ -811,11 +700,12 @@ function updateLoyaltyCount() {
     }
 }
 
-// Initialize on page load
+// Initialize saat page load
 document.addEventListener('DOMContentLoaded', function() {
     console.log('✅ Admin dashboard initialized');
+    initializeEventListeners();
     
-    // Set first tab as active
+    // Set active tab pertama
     const firstBtn = document.querySelector('.tab-btn');
     if (firstBtn) {
         firstBtn.classList.add('bg-blue-600', 'text-white', 'shadow-sm');

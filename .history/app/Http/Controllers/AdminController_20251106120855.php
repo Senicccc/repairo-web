@@ -182,34 +182,47 @@ class AdminController extends Controller
     }
 
     // Update Loyalty - PERBAIKAN: Gunakan PUT method
-    public function updateLoyalty(Request $request, $id)
-    {
-        try {
-            $loyalty = LoyaltyReward::findOrFail($id);
+ // Update Loyalty - WITH EXTENDED DEBUGGING
+public function updateLoyalty(Request $request, $id)
+{
+    \Log::info('🔄 UPDATE LOYALTY - Starting update process', ['id' => $id]);
+    \Log::info('🔄 UPDATE LOYALTY - Request data:', $request->all());
+    
+    try {
+        $loyalty = LoyaltyReward::findOrFail($id);
+        \Log::info('🔄 UPDATE LOYALTY - Loyalty record found:', ['loyalty' => $loyalty->toArray()]);
 
-            $validated = $request->validate([
-                'status' => 'required|string|in:claimed,used',
-                'reward_type' => 'required|string|in:discount,gift',
-                'points_used' => 'required|integer|min:0',
-                'reward_value' => 'required|string|max:255',
-            ]);
+        $validated = $request->validate([
+            'status' => 'required|string|in:claimed,used',
+            'reward_type' => 'required|string|in:discount,gift',
+            'points_used' => 'required|integer|min:0',
+            'reward_value' => 'required|string|max:255',
+        ]);
 
-            Log::info('Updating loyalty reward:', $validated);
-            
-            $loyalty->update($validated);
+        Log::info('🔄 UPDATE LOYALTY - Validation passed:', $validated);
+        
+        $loyalty->update($validated);
+        Log::info('✅ UPDATE LOYALTY - Successfully updated');
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Loyalty reward updated successfully',
-                'loyalty' => $loyalty->load('user')
-            ]);
-            
-        } catch (\Exception $e) {
-            Log::error('Error updating loyalty reward: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to update loyalty reward: ' . $e->getMessage()
-            ], 500);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Loyalty reward updated successfully',
+            'loyalty' => $loyalty->load('user')
+        ]);
+        
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        Log::error('❌ UPDATE LOYALTY - Validation failed:', ['errors' => $e->errors()]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Validation failed',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        Log::error('❌ UPDATE LOYALTY - Error:', ['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update loyalty reward: ' . $e->getMessage()
+        ], 500);
     }
+}
 }
