@@ -59,6 +59,7 @@
                 </a>
             </div>
         </form>
+    </div>
 
     <!-- Animations -->
     <style>

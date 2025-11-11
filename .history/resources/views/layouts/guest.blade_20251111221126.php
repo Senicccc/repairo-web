@@ -14,30 +14,26 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
 <body class="font-sans text-gray-900 antialiased bg-gradient-to-br from-white via-[#f6f6ff] to-[#1800ad]/10">
-    <div class="min-h-screen flex flex-col items-center justify-center px-6 sm:px-0 py-10">
+    <div class="min-h-screen flex flex-col justify-center items-center px-4 sm:px-0">
+        <!-- Logo -->
+        <div class="mb-8 sm:mb-10">
+            <a href="/">
+                <img src="{{ asset('images/repairo-logo.png') }}" 
+                     alt="Repairo Logo" 
+                     class="w-28 h-28 sm:w-32 sm:h-32 object-contain drop-shadow-md transition-transform duration-300 hover:scale-105">
+            </a>
+        </div>
 
         <!-- Card -->
-        <div class="w-full max-w-md bg-white rounded-lg border border-gray-100 p-8 sm:p-10 backdrop-blur-sm animate-fade-in">
+        <div class="w-full sm:max-w-md bg-white shadow-lg rounded-2xl border border-gray-100 p-6 sm:p-8 backdrop-blur-sm">
             {{ $slot }}
         </div>
 
         <!-- Footer -->
-        <p class="mt-10 text-sm text-gray-400 text-center">
+        <p class="mt-10 text-sm text-gray-400">
             © {{ date('Y') }} Repairo. All rights reserved.
         </p>
     </div>
-
-    <!-- Smooth Animations -->
-    <style>
-        @keyframes fade-in {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fade-in 0.6s ease-out both;
-        }
-    </style>
 </body>
 </html>

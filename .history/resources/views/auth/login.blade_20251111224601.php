@@ -1,4 +1,5 @@
 <x-guest-layout>
+    <div class="max-w-md bg-white/95 rounded-lg p-10 animate-fade-in">
         <!-- Header -->
         <div class="flex flex-col items-center text-center mb-8">
             <img src="{{ asset('images/repairo-logo.png') }}" 
@@ -59,6 +60,7 @@
                 </a>
             </div>
         </form>
+    </div>
 
     <!-- Animations -->
     <style>
