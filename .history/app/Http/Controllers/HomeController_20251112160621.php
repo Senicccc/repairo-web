@@ -24,31 +24,13 @@ class HomeController extends Controller
         return redirect()->route('users.dashboard');
     }
 
-    public function cashierDashboard(\Illuminate\Http\Request $request)
+    public function cashierDashboard()
     {
         // Use pagination for large datasets
         $perPage = 15;
-
-        $query = $request->get('q');
-
-        // Base query
-        $repairsQuery = Repair::with('user', 'payment')->orderBy('created_at', 'desc');
-
-        if ($query) {
-            $repairsQuery->where(function ($q) use ($query) {
-                $q->where('tracking_id', 'like', "%{$query}%")
-                  ->orWhere('customer_name', 'like', "%{$query}%")
-                  ->orWhere('phone_brand', 'like', "%{$query}%")
-                  ->orWhere('phone_model', 'like', "%{$query}%")
-                  ->orWhere('imei', 'like', "%{$query}%")
-                  ->orWhere('complaint', 'like', "%{$query}%")
-                  ->orWhereHas('user', function ($u) use ($query) {
-                      $u->where('name', 'like', "%{$query}%");
-                  });
-            });
-        }
-
-        $repairs = $repairsQuery->paginate($perPage)->appends($request->only('q'));
+        $repairs = Repair::with('user', 'payment')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
 
         $users = User::orderBy('name')->get();
 
@@ -59,11 +41,9 @@ class HomeController extends Controller
         // Paid is based on payments table
         $paidRepairs = Payment::where('status', 'paid')->count();
 
-        $searchQuery = $query;
-
         return view('cashier.index', compact(
             'repairs', 'users',
-            'totalRepairs', 'pendingRepairs', 'finishedRepairs', 'paidRepairs', 'searchQuery'
+            'totalRepairs', 'pendingRepairs', 'finishedRepairs', 'paidRepairs'
         ));
     }
 

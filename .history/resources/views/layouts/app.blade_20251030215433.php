@@ -15,25 +15,22 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-
-    <body class="font-sans antialiased bg-gray-50">
-        <div class="min-h-screen flex flex-col">
-            
-            {{-- NAVBAR --}}
+    <body class="font-sans antialiased">
+        <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
-            {{-- HEADER (hapus jarak besar) --}}
+            <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white shadow-sm">
-                    <div class="max-w-7xl mx-auto py-2 px-4 sm:px-6 lg:px-8">
+                <header class="bg-white shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endisset
 
-            {{-- CONTENT (hapus jarak besar di atas) --}}
-            <main class="flex-1">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
+            <!-- Page Content -->
+            <main>
+                <div class="max-w-7xl mx-auto p-4">
                     @if (session('success'))
                         <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">{{ session('success') }}</div>
                     @endif
@@ -41,8 +38,6 @@
                         <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">{{ session('error') }}</div>
                     @endif
                 </div>
-
-                {{-- Page Section --}}
                 @yield('content')
             </main>
         </div>

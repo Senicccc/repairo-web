@@ -25,46 +25,20 @@
         </div>
     </section>
 
-{{-- ABOUT SECTION --}}
-<section class="relative py-24 bg-gradient-to-br from-[#0A4D9E]/5 via-white to-[#0A4D9E]/10 overflow-hidden">
-    <div class="absolute inset-0">
-        <img src="{{ asset('home/about-bg.jpg') }}" 
-             alt="About Repairo" 
-             class="w-full h-full object-cover opacity-20">
-        <div class="absolute inset-0 bg-white/80 backdrop-blur-sm"></div>
-    </div>
-
-    <div class="relative z-10 max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
-        
-        {{-- Left: Text --}}
-        <div class="text-center lg:text-left">
-            <h2 class="text-4xl lg:text-5xl font-extrabold text-[#0A4D9E] mb-6">
-                About <span class="text-gray-900">Repairo</span>
-            </h2>
-            <p class="text-lg text-gray-700 leading-relaxed mb-8">
-                <span class="font-semibold text-[#0A4D9E]">Repairo</span> is your trusted partner for gadget repair excellence. 
-                We combine technology, precision, and transparency to bring your devices back to life. 
-                Our certified technicians use only genuine parts and modern tools, ensuring every repair 
-                is performed with care and integrity.
+    {{-- ABOUT SECTION --}}
+    <section class="min-h-screen flex items-center bg-gradient-to-br from-gray-50 to-white">
+        <div class="max-w-6xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-[#0A4D9E] mb-6">About Repairo</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
+                At <span class="font-semibold text-[#0A4D9E]">Repairo</span>, we combine innovation and integrity 
+                to deliver top-tier gadget repair services. Our certified experts handle smartphones, tablets, 
+                and laptops with precision and care — using only genuine parts, transparent pricing, and modern tools.  
             </p>
-            <a href="{{ route('tracking') }}" 
-               class="inline-block bg-[#0A4D9E] text-white font-semibold px-8 py-3 rounded-full shadow hover:bg-[#093e81] hover:scale-105 transition-transform duration-300">
-                Learn More
-            </a>
-        </div>
-
-            {{-- Right: Image --}}
-            <div class="flex justify-center">
-                <div class="relative w-full max-w-md">
-                    <div class="absolute -top-6 -left-6 w-full h-full bg-[#0A4D9E]/10 rounded-3xl rotate-3"></div>
-                    <img src="{{ asset('home/about-device.jpg') }}" 
-                        alt="Device Repair" 
-                        class="relative rounded-3xl shadow-2xl w-full object-cover">
-                </div>
+            <div class="mt-10 flex justify-center">
+                <div class="w-32 h-1 bg-[#0A4D9E] rounded-full"></div>
             </div>
         </div>
     </section>
-
 
     {{-- SERVICE FLOW --}}
     <section class="min-h-screen flex items-center bg-white">

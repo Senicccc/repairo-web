@@ -202,45 +202,6 @@
 
 <!-- Client-side filtering removed: search performed server-side via GET param 'q' -->
 
-<script>
-// Improve search UX: submit form on Enter and also auto-submit after user stops typing (debounced)
-(function(){
-    const form = document.querySelector('form[action="{{ route('cashier.dashboard') }}"]');
-    if (!form) return;
-
-    const input = form.querySelector('input[name=q]');
-    if (!input) return;
-
-    let timer = null;
-    const debounceMs = 600;
-
-    // Trim value helper
-    function trimmedValue() {
-        return input.value.replace(/^\s+|\s+$/g, '');
-    }
-
-    // Submit with trimmed value
-    function submitSearch() {
-        const v = trimmedValue();
-        // If empty, still submit to clear filters
-        input.value = v;
-        form.submit();
-    }
-
-    input.addEventListener('keydown', function(e){
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            submitSearch();
-        }
-    });
-
-    input.addEventListener('input', function(){
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(submitSearch, debounceMs);
-    });
-})();
-</script>
-
 <style>
 .line-clamp-2 {
     display: -webkit-box;

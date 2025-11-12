@@ -17,23 +17,25 @@
     </head>
 
     <body class="font-sans antialiased bg-gray-50">
+        {{-- Wrapper --}}
         <div class="min-h-screen flex flex-col">
-            
-            {{-- NAVBAR --}}
+
+            {{-- Navigation Bar --}}
             @include('layouts.navigation')
 
-            {{-- HEADER (hapus jarak besar) --}}
+            {{-- Optional Header --}}
             @isset($header)
                 <header class="bg-white shadow-sm">
-                    <div class="max-w-7xl mx-auto py-2 px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
                 </header>
             @endisset
 
-            {{-- CONTENT (hapus jarak besar di atas) --}}
+            {{-- Page Content --}}
             <main class="flex-1">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+                    {{-- Flash messages --}}
                     @if (session('success'))
                         <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">{{ session('success') }}</div>
                     @endif

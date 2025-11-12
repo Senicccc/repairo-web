@@ -57,20 +57,12 @@ class UsersDashboardController extends Controller
         return view('users.repair-history', compact('repairs'));
     }
 
-    public function showRepair($repairId)
+    public function showRepair($id)
     {
         $user = Auth::user();
-
-        // Find the repair - will throw 404 if not found
-        $repair = Repair::findOrFail($repairId);
-
-        // Ensure the authenticated user owns this repair
-        if ($repair->user_id !== $user->id) {
-            abort(403, 'You are not authorized to view this repair.');
-        }
-
-        // Eager load relations
-        $repair->load(['repairSpareparts', 'payment']);
+        $repair = Repair::where('user_id', $user->id)
+            ->with(['repairSpareparts', 'payment'])
+            ->findOrFail($id);
 
         return view('users.repair-detail', compact('repair'));
     }

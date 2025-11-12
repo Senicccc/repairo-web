@@ -53,17 +53,17 @@
             </a>
         </div>
 
-            {{-- Right: Image --}}
-            <div class="flex justify-center">
-                <div class="relative w-full max-w-md">
-                    <div class="absolute -top-6 -left-6 w-full h-full bg-[#0A4D9E]/10 rounded-3xl rotate-3"></div>
-                    <img src="{{ asset('home/about-device.jpg') }}" 
-                        alt="Device Repair" 
-                        class="relative rounded-3xl shadow-2xl w-full object-cover">
-                </div>
+        {{-- Right: Image --}}
+        <div class="flex justify-center">
+            <div class="relative w-full max-w-md">
+                <div class="absolute -top-6 -left-6 w-full h-full bg-[#0A4D9E]/10 rounded-3xl rotate-3"></div>
+                <img src="{{ asset('home/about-device.jpg') }}" 
+                     alt="Device Repair" 
+                     class="relative rounded-3xl shadow-2xl w-full object-cover">
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
 
     {{-- SERVICE FLOW --}}

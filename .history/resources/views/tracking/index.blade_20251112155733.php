@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-5xl mx-auto p-6 sm:p-8">
-    <h2 class="text-3xl font-extrabold mb-6 text-gray-900 text-center tracking-tight"> Track Your Repair</h2>
+    <h2 class="text-3xl font-extrabold mb-6 text-gray-900 text-center tracking-tight">🔧 Track Your Repair</h2>
 
     <form method="POST" action="{{ route('tracking.search') }}" class="mb-8">
         @csrf

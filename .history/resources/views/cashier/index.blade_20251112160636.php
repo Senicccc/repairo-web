@@ -64,14 +64,11 @@
         </div>
     </div>
 
-    <!-- SEARCH (server-side) -->
+    <!-- SEARCH -->
     <div class="mb-4">
-        <form method="GET" action="{{ route('cashier.dashboard') }}">
-            <input type="text" name="q" id="searchBar" placeholder="Search repairs by customer, device, or tracking ID..." 
-                   value="{{ old('q', $searchQuery ?? request('q')) }}"
-                   class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring focus:ring-blue-200 focus:outline-none"
-                   aria-label="Search repairs">
-        </form>
+        <input type="text" id="searchBar" placeholder="Search repairs by customer, device, or tracking ID..." 
+               class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring focus:ring-blue-200 focus:outline-none"
+               onkeyup="filterTable()">
     </div>
 
     <!-- MAIN TABLE -->
@@ -187,8 +184,8 @@
     </div>
 
     <!-- EMPTY STATE -->
-    @if(($totalRepairs ?? $repairs->count()) === 0)
-    <div id="emptyState" class="text-center py-12">
+    @if($repairs->count() === 0)
+    <div class="text-center py-12">
         <div class="text-gray-400 text-6xl mb-4">🔧</div>
         <h3 class="text-lg font-semibold text-gray-600">No repairs found</h3>
         <p class="text-gray-500 mt-2">Get started by creating a new repair request</p>
@@ -200,45 +197,28 @@
     @endif
 </div>
 
-<!-- Client-side filtering removed: search performed server-side via GET param 'q' -->
-
 <script>
-// Improve search UX: submit form on Enter and also auto-submit after user stops typing (debounced)
-(function(){
-    const form = document.querySelector('form[action="{{ route('cashier.dashboard') }}"]');
-    if (!form) return;
-
-    const input = form.querySelector('input[name=q]');
-    if (!input) return;
-
-    let timer = null;
-    const debounceMs = 600;
-
-    // Trim value helper
-    function trimmedValue() {
-        return input.value.replace(/^\s+|\s+$/g, '');
-    }
-
-    // Submit with trimmed value
-    function submitSearch() {
-        const v = trimmedValue();
-        // If empty, still submit to clear filters
-        input.value = v;
-        form.submit();
-    }
-
-    input.addEventListener('keydown', function(e){
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            submitSearch();
-        }
+function filterTable() {
+    const input = document.getElementById('searchBar').value.toLowerCase();
+    const rows = document.querySelectorAll('#repairsTable tbody tr');
+    
+    rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? '' : 'none';
     });
 
-    input.addEventListener('input', function(){
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(submitSearch, debounceMs);
-    });
-})();
+    // Show/hide empty state
+    const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+    const emptyState = document.getElementById('emptyState');
+    if (emptyState) {
+        emptyState.style.display = visibleRows.length === 0 ? 'block' : 'none';
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    filterTable(); // Apply filter on page load if there's any search text
+});
 </script>
 
 <style>

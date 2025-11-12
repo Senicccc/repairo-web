@@ -12,21 +12,15 @@
                 </h1>
                 <p class="text-gray-500 mt-2 text-sm">Here’s your repair overview and loyalty progress.</p>
             </div>
-
-            {{-- Loyalty Points Gradient Card --}}
-            <div class="relative overflow-hidden text-white px-6 py-5 rounded-xl shadow-md text-center min-w-[240px]"
-                 style="background: linear-gradient(135deg, #1800ad 0%, #3f37c9 50%, #4361ee 100%);">
-                <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top_left,_#fff,_transparent_60%)]"></div>
-                <div class="relative z-10">
-                    <p class="text-sm font-medium opacity-80">Your Points Balance</p>
-                    <p class="text-4xl font-bold mt-1">{{ number_format($userPoints ?? auth()->user()->loyalty_points ?? 0) }} pts</p>
-                    <p class="text-xs opacity-75 mt-1">Available for rewards</p>
-                    <div class="mt-4">
-                        <a href="{{ route('loyalty.rewards') }}" 
-                           class="inline-block bg-white text-[#1800ad] text-sm font-semibold px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
-                            Loyalty Center →
-                        </a>
-                    </div>
+            <div class="bg-gradient-to-br from-[#1800ad] to-indigo-700 text-white px-6 py-5 rounded-xl shadow-md text-center min-w-[240px]">
+                <p class="text-sm font-medium opacity-80">Your Points Balance</p>
+                <p class="text-4xl font-bold mt-1">{{ number_format($userPoints ?? auth()->user()->loyalty_points ?? 0) }} pts</p>
+                <p class="text-xs opacity-75 mt-1">Available for rewards</p>
+                <div class="mt-4">
+                    <a href="{{ route('loyalty.rewards') }}" 
+                       class="inline-block bg-white text-[#1800ad] text-sm font-semibold px-4 py-2 rounded-lg shadow-sm hover:bg-gray-100 transition">
+                        Loyalty Center →
+                    </a>
                 </div>
             </div>
         </div>
@@ -68,9 +62,15 @@
 
     {{-- Recent Repairs --}}
     <div class="bg-white shadow-md rounded-2xl border border-gray-100 mb-8">
-        <div class="px-8 py-5 border-b border-gray-100">
-            <h2 class="text-xl font-bold text-gray-900">Recent Repair Requests</h2>
-            <p class="text-sm text-gray-500">Latest device repair updates</p>
+        <div class="px-8 py-5 border-b border-gray-100 flex justify-between items-center">
+            <div>
+                <h2 class="text-xl font-bold text-gray-900">Recent Repair Requests</h2>
+                <p class="text-sm text-gray-500">Latest device repair updates</p>
+            </div>
+            <a href="{{ route('repairs.create') }}" 
+               class="bg-[#1800ad] text-white px-4 py-2 rounded-lg text-sm font-medium shadow hover:bg-indigo-900 transition">
+                + New Request
+            </a>
         </div>
 
         <div class="overflow-x-auto">
@@ -145,6 +145,17 @@
             <h2 class="text-xl font-bold text-gray-900">Quick Actions</h2>
         </div>
         <div class="p-6 grid md:grid-cols-3 gap-6">
+            <a href="{{ route('repairs.create') }}" 
+               class="group flex items-center p-5 border border-gray-200 rounded-xl hover:border-[#1800ad] hover:bg-blue-50 transition">
+                <div class="w-12 h-12 bg-[#1800ad] rounded-full flex items-center justify-center text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6v12m6-6H6"/></svg>
+                </div>
+                <div class="ml-4">
+                    <h3 class="font-semibold text-gray-900">New Repair Request</h3>
+                    <p class="text-sm text-gray-500">Submit a device for service</p>
+                </div>
+            </a>
+
             <a href="{{ route('repairs.history') }}" 
                class="group flex items-center p-5 border border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition">
                 <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white">
