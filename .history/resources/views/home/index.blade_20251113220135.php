@@ -54,7 +54,7 @@
                 </a>
             </div>
 
-            {{-- Right side: Layered image --}}
+            {{-- Right side: Layered image (no cut-off) --}}
             <div class="flex justify-center relative overflow-visible">
                 {{-- Decorative background layer --}}
                 <div class="absolute -top-8 -left-8 w-full max-w-md h-full bg-[#1800AD]/10 rounded-3xl rotate-3"></div>

@@ -54,7 +54,7 @@
                 </a>
             </div>
 
-            {{-- Right side: Layered image --}}
+            {{-- Right side: Layered image (no cut-off) --}}
             <div class="flex justify-center relative overflow-visible">
                 {{-- Decorative background layer --}}
                 <div class="absolute -top-8 -left-8 w-full max-w-md h-full bg-[#1800AD]/10 rounded-3xl rotate-3"></div>
@@ -74,7 +74,7 @@
 
     {{-- SERVICE FLOW --}}
     <section class="py-24 bg-gradient-to-b from-white to-[#F3F5FF] relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-cover bg-center"></div>
+        <div class="absolute inset-0 opacity-10 bg-[url('{{ asset('images/home/about.png') }}')] bg-cover bg-center"></div>
 
         <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-extrabold text-[#1800AD] mb-4">How Our Service Works</h2>

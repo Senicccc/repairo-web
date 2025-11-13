@@ -16,7 +16,7 @@
             </h1>
             <p class="text-lg md:text-xl mb-8 leading-relaxed text-gray-100">
                 Fast, professional, and transparent gadget repair services.<br>
-                We bring your devices back to life with quality you can trust.
+                We bring your devices back to life — with quality you can trust.
             </p>
             <a href="{{ route('tracking') }}" 
                class="bg-white text-[#0A4D9E] font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-gray-100 hover:scale-105 transition transform duration-300">
@@ -26,7 +26,7 @@
     </section>
 
     {{-- ABOUT SECTION --}}
-    <section class="relative py-24 bg-gradient-to-br from-[#1800AD]/5 via-white to-[#1800AD]/10 overflow-hidden">
+    <section class="relative py-24 bg-gradient-to-br from-[#0A4D9E]/5 via-white to-[#0A4D9E]/10 overflow-hidden">
         {{-- Soft background image --}}
         <div class="absolute inset-0">
             <img src="{{ asset('images/home/about.png') }}" 
@@ -39,42 +39,45 @@
 
             {{-- Left side: About text --}}
             <div class="text-center lg:text-left">
-                <h2 class="text-4xl lg:text-5xl font-extrabold text-[#1800AD] mb-6">
+                <h2 class="text-4xl lg:text-5xl font-extrabold text-[#0A4D9E] mb-6">
                     About <span class="text-gray-900">Repairo</span>
                 </h2>
                 <p class="text-lg text-gray-700 leading-relaxed mb-8">
-                    <span class="font-semibold text-[#1800AD]">Repairo</span> is your trusted partner in gadget repair excellence.
+                    <span class="font-semibold text-[#0A4D9E]">Repairo</span> is your trusted partner in gadget repair excellence.
                     We blend technology, precision, and transparency to bring your devices back to life.
                     Our certified technicians use only genuine parts and cutting-edge tools, ensuring
                     every repair is performed with care, integrity, and lasting quality.
                 </p>
                 <a href="{{ route('tracking') }}" 
-                class="inline-block bg-[#1800AD] text-white font-semibold px-8 py-3 rounded-full shadow hover:bg-[#15008f] hover:scale-105 transition-transform duration-300">
+                class="inline-block bg-[#0A4D9E] text-white font-semibold px-8 py-3 rounded-full shadow hover:bg-[#093e81] hover:scale-105 transition-transform duration-300">
                     Learn More
                 </a>
             </div>
 
-            {{-- Right side: Layered image --}}
-            <div class="flex justify-center relative overflow-visible">
+            {{-- Right side: Layered image for depth --}}
+            <div class="flex justify-center relative">
                 {{-- Decorative background layer --}}
-                <div class="absolute -top-8 -left-8 w-full max-w-md h-full bg-[#1800AD]/10 rounded-3xl rotate-3"></div>
+                <div class="absolute -top-6 -left-6 w-full max-w-md h-full bg-[#0A4D9E]/10 rounded-3xl rotate-3"></div>
                 
-                {{-- Main image --}}
+                {{-- Main image (foreground) --}}
                 <img src="{{ asset('images/home/about.png') }}" 
                     alt="Device Repair" 
                     class="relative rounded-3xl shadow-2xl w-full max-w-md object-cover z-10">
 
-                {{-- Reflection / soft shadow --}}
+                {{-- Secondary image (soft shadow depth) --}}
                 <img src="{{ asset('images/home/about.png') }}" 
-                    alt="Device Repair Reflection" 
-                    class="absolute right-0 top-8 w-[90%] opacity-40 blur-sm translate-x-6 translate-y-8 rounded-3xl scale-105">
+                    alt="Device Repair Blur" 
+                    class="absolute right-0 top-8 w-[85%] opacity-30 blur-sm translate-x-6 translate-y-6 rounded-3xl">
             </div>
         </div>
     </section>
 
+
+
     {{-- SERVICE FLOW --}}
     <section class="py-24 bg-gradient-to-b from-white to-[#F3F5FF] relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-cover bg-center"></div>
+        {{-- Decorative background pattern --}}
+        <div class="absolute inset-0 opacity-10 bg-[url('{{ asset('images/home/pattern.svg') }}')] bg-cover bg-center"></div>
 
         <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-extrabold text-[#1800AD] mb-4">How Our Service Works</h2>
@@ -145,18 +148,15 @@
         <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-extrabold text-[#1800AD] mb-4">Our Location</h2>
             <p class="text-gray-600 mb-12 text-lg max-w-2xl mx-auto">
-                Find us easily at our central service hub below or open directly in Google Maps.
+                Find us easily in the heart of Jakarta or get directions through Google Maps.
             </p>
 
-            <div class="relative w-full h-[70vh] rounded-3xl overflow-hidden shadow-2xl border border-gray-200 group">
-                <a href="https://www.google.com/maps/place/Jakarta+Pusat/" 
-                   target="_blank" 
-                   class="absolute inset-0 bg-[#1800AD]/10 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                    <p class="text-white bg-[#1800AD] px-8 py-3 rounded-full font-semibold shadow-lg">
+            <div class="relative w-full h-[70vh] rounded-3xl overflow-hidden shadow-2xl border border-gray-200">
+                <div class="absolute inset-0 bg-[#1800AD]/10 backdrop-blur-[1px] opacity-0 hover:opacity-100 flex items-center justify-center transition">
+                    <p class="text-white bg-[#1800AD] px-6 py-3 rounded-full font-semibold shadow-md">
                         View on Google Maps
                     </p>
-                </a>
-
+                </div>
                 <iframe 
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3966.564317342181!2d106.82715387512416!3d-6.191263993798715!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f3e95d2f47c3%3A0x57b67e4b2e2a01c9!2sJakarta%20Pusat!5e0!3m2!1sen!2sid!4v1730657433214!5m2!1sen!2sid" 
                     width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy">
@@ -164,5 +164,7 @@
             </div>
         </div>
     </section>
+
+
 </div>
 @endsection

@@ -54,7 +54,7 @@
                 </a>
             </div>
 
-            {{-- Right side: Layered image --}}
+            {{-- Right side: Layered image (no cut-off) --}}
             <div class="flex justify-center relative overflow-visible">
                 {{-- Decorative background layer --}}
                 <div class="absolute -top-8 -left-8 w-full max-w-md h-full bg-[#1800AD]/10 rounded-3xl rotate-3"></div>
@@ -65,7 +65,7 @@
                     class="relative rounded-3xl shadow-2xl w-full max-w-md object-cover z-10">
 
                 {{-- Reflection / soft shadow --}}
-                <img src="{{ asset('images/home/about.png') }}" 
+                <img src="{{ asset('images/home/about.png\') }}" 
                     alt="Device Repair Reflection" 
                     class="absolute right-0 top-8 w-[90%] opacity-40 blur-sm translate-x-6 translate-y-8 rounded-3xl scale-105">
             </div>
@@ -74,7 +74,7 @@
 
     {{-- SERVICE FLOW --}}
     <section class="py-24 bg-gradient-to-b from-white to-[#F3F5FF] relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-cover bg-center"></div>
+        <div class="absolute inset-0 opacity-10 bg-[url('{{ asset('images/home/pattern.svg') }}')] bg-cover bg-center"></div>
 
         <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-extrabold text-[#1800AD] mb-4">How Our Service Works</h2>

@@ -8,7 +8,7 @@
         <img src="{{ asset('images/home/home.png') }}" 
              alt="Phone Repair" 
              class="absolute inset-0 w-full h-full object-cover brightness-75">
-        <div class="absolute inset-0 bg-gradient-to-b from-[#0A4D9E]/70 via-[#0A4D9E]/60 to-[#0A4D9E]/80"></div>
+        <div class="absolute inset-0 bg-gradient-to-b from-[#1800AD]/70 via-[#1800AD]/60 to-[#1800AD]/80"></div>
 
         <div class="relative z-10 max-w-5xl text-center px-6 text-white">
             <h1 class="text-5xl md:text-6xl font-extrabold mb-6 drop-shadow-lg">
@@ -16,10 +16,10 @@
             </h1>
             <p class="text-lg md:text-xl mb-8 leading-relaxed text-gray-100">
                 Fast, professional, and transparent gadget repair services.<br>
-                We bring your devices back to life with quality you can trust.
+                We bring your devices back to life — with quality you can trust.
             </p>
             <a href="{{ route('tracking') }}" 
-               class="bg-white text-[#0A4D9E] font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-gray-100 hover:scale-105 transition transform duration-300">
+               class="bg-white text-[#1800AD] font-semibold px-8 py-3 rounded-full shadow-lg hover:bg-gray-100 hover:scale-105 transition transform duration-300">
                 Track Your Repair
             </a>
         </div>
@@ -54,7 +54,7 @@
                 </a>
             </div>
 
-            {{-- Right side: Layered image --}}
+            {{-- Right side: Layered image (no cut-off) --}}
             <div class="flex justify-center relative overflow-visible">
                 {{-- Decorative background layer --}}
                 <div class="absolute -top-8 -left-8 w-full max-w-md h-full bg-[#1800AD]/10 rounded-3xl rotate-3"></div>
@@ -74,7 +74,7 @@
 
     {{-- SERVICE FLOW --}}
     <section class="py-24 bg-gradient-to-b from-white to-[#F3F5FF] relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-cover bg-center"></div>
+        <div class="absolute inset-0 opacity-10 bg-[url('{{ asset('images/home/pattern.svg') }}')] bg-cover bg-center"></div>
 
         <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-extrabold text-[#1800AD] mb-4">How Our Service Works</h2>
