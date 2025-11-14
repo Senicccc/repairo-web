@@ -68,7 +68,6 @@ class SparepartTableSeeder extends Seeder
                 foreach ($parts as $part) {
                     $category = $categories[array_rand($categories)];
 
-                    // Harga rapi kelipatan 50.000
                     $price = match ($category) {
                         'Original' => rand(10, 50) * 50000,      
                         'OEM' => rand(6, 36) * 50000,            

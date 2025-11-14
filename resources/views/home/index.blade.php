@@ -109,7 +109,7 @@
 
     {{-- MEMBER BENEFITS --}}
     <section class="py-24 bg-gradient-to-br from-[#EAF0FF] to-[#FFFFFF] relative overflow-hidden">
-        <div class="absolute inset-0 bg-[url('{{ asset('images/home/waves.svg') }}')] bg-cover bg-center opacity-5"></div>
+        <div class="absolute inset-0 bg-cover bg-center opacity-5"></div>
 
         <div class="relative z-10 max-w-6xl mx-auto px-6 text-center">
             <h2 class="text-4xl font-extrabold text-[#1800AD] mb-4">Exclusive Member Benefits</h2>
