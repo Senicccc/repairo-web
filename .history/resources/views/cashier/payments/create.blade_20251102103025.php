@@ -60,6 +60,7 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">Status *</label>
                     <select name="status" required class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="paid">Paid</option>
+                        <option value="unpaid">Unpaid</option>
                     </select>
                 </div>
             </div>

@@ -13,14 +13,12 @@ use Illuminate\Support\Facades\Schema;
 class RepairController extends Controller
 {
     /**
-     * Display all repairs for cashier repairs list (paginated)
+     * Display all repairs for cashier dashboard
      */
     public function index()
     {
-        $repairs = Repair::with(['user', 'payment'])
-            ->orderBy('created_at', 'desc')
-            ->paginate(15);
-        return view('cashier.repairs.index', compact('repairs'));
+        $repairs = Repair::with(['user', 'payment'])->get();
+        return view('cashier.index', compact('repairs'));
     }
 
     /**
