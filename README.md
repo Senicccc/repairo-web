@@ -138,7 +138,7 @@ Repairo is built using:
 
 | Branch | Description | Status |
 |--------|-------------|--------|
-| **final** / **build** | Production-ready compiled version | Stable Release |
+| **final** | Production-ready compiled version | Stable Release |
 | **main** | Development version — active feature updates | Development Only |
 
 ---
