@@ -1,4 +1,4 @@
-# Repairo — Gadget and Mobile Phone Repair Management System
+# Repairo Website - Gadget and Mobile Phone Repair Management System
 
 Repairo is a web-based application built with **Laravel**, designed to streamline and enhance the operations of mobile phone repair shops.  
 The system provides complete management of customers, repair workflows, technician processes, payments, and loyalty points.
