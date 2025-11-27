@@ -1,4 +1,4 @@
-#  Repairo Gadget and Moobile Phone Repair Management System
+# Repairo — Gadget and Mobile Phone Repair Management System
 
 Repairo is a web-based application built with **Laravel**, designed to streamline and enhance the operations of mobile phone repair shops.  
 The system provides complete management of customers, repair workflows, technician processes, payments, and loyalty points.
@@ -7,10 +7,10 @@ The system provides complete management of customers, repair workflows, technici
 
 ## 👥 Group Project Developers
 
-|| Name                          || Student ID    || 
-||-------------------------------||---------------||
-|| **Nicholas Jeremy Hendrajaya**|| 2310631170109 ||
-|| **Nur Muhammad**              || 2310631170145 ||
+| Name                           | Student ID       |
+|-------------------------------|------------------|
+| **Nicholas Jeremy Hendrajaya** | 2310631170109    |
+| **Nur Muhammad**               | 2310631170145    |
 
 ---
 
@@ -138,40 +138,33 @@ Repairo is built using:
 
 | Branch | Description | Status |
 |--------|-------------|--------|
-| **main** | Development version — active feature updates | 🔧 Active Development |
-| **final** / **build** | Production-ready compiled version | 🚀 Stable Release |
+| **final** / **build** | Production-ready compiled version | Stable Release |
+| **main** | Development version — active feature updates | Development Only |
 
 ---
 
-## ▶️ Installation (Development Mode)
-
-Clone the repository:
+## ▶️ Installation 
 
 ```bash
+# Clone the repository
 git clone <repository-url>
 cd repairo
-Install dependencies:
 
+# Install dependencies
 composer install
 npm install
 
-
-Setup environment variables:
-
+# Setup environment
 cp .env.example .env
 php artisan key:generate
 
-
-Run migrations:
-
+# Run migrations
 php artisan migrate
 
-
-Run development servers:
-
+# Start development servers
 npm run dev
 php artisan serve
 
-🚀 Production Build
+# Production Build
 npm run build
 php artisan optimize
