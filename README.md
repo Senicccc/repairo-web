@@ -1,41 +1,177 @@
-# 🛠️ Repairo — Gadget Service Website
+#  Repairo Gadget and Moobile Phone Repair Management System
 
-Repairo is a **web-based mobile phone repair management system** built with **Laravel 11** and **Tailwind CSS**.  
-It is designed to help service shop owners and employees handle daily repair operations efficiently and in a well-structured digital environment.
-
-> ⚠️ **Status:** Under development — UI, page flow, and performance optimization are currently in progress.
+Repairo is a web-based application built with **Laravel**, designed to streamline and enhance the operations of mobile phone repair shops.  
+The system provides complete management of customers, repair workflows, technician processes, payments, and loyalty points.
 
 ---
 
-## 🔄 System Flow Overview
+## 👥 Group Project Developers
 
-1. **Customer Data Input**  
-   Staff or admin record customer information and repair details (device type, issue, contact, and repair status).
-
-2. **Repair Process Tracking**  
-   Each repair request is tracked from check-in to completion, allowing technicians to update progress in real time.
-
-3. **Payment Handling**  
-   Cashiers record payment transactions linked to specific repair orders.  
-   The system ensures accurate tracking between service status and payment confirmation.
-
-4. **Dashboard & Announcements**  
-   Admins can post shop updates, maintenance notices, or reminders directly visible on the dashboard.
-
-5. **Role-Based Access**  
-   - **Admin:** Full access — manages users, announcements, and reports.  
-   - **Technician:** Can update repair progress and status only.  
-   - **Cashier:** Handles transactions and payment confirmation.  
-
-6. **UI & Navigation**  
-   Each role has a custom sidebar and optimized layout for easier workflow.  
-   The design follows a minimalist, responsive, and fast-loading structure using Tailwind CSS.
+|| Name                          || Student ID    || 
+||-------------------------------||---------------||
+|| **Nicholas Jeremy Hendrajaya**|| 2310631170109 ||
+|| **Nur Muhammad**              || 2310631170145 ||
 
 ---
 
-## 🎯 Development Focus
+## 📌 Table of Contents
+- [Tech Stack](#-tech-stack)
+- [Key Features](#-key-features)
+- [User Roles](#-user-roles)
+- [Service Workflow](#-service-workflow)
+- [Project Versions](#-project-versions)
+- [Installation (Development Mode)](#️-installation-development-mode)
+- [Production Build](#-production-build)
 
-- Refining **page structure** and **navigation flow**  
-- Enhancing **UI responsiveness** and **load performance**  
-- Implementing **reusable Blade components**  
-- Preparing **reporting and notification modules**
+---
+
+## 🧰 Tech Stack
+
+Repairo is built using:
+
+- **Laravel** — Backend framework (MVC architecture)  
+- **Laravel Breeze** — Authentication scaffolding  
+- **Tailwind CSS** — Utility-first styling framework  
+- **MySQL** — Relational database  
+- **Laravel Migrations** — Database schema management  
+- **Vite** — Asset bundler & build tool  
+- *(Optional)* **Flowbite** — Tailwind-based UI components  
+
+---
+
+## ✨ Key Features
+
+### 🔹 Customer Management
+- Customer CRUD  
+- Repair history  
+- Loyalty point tracking  
+
+### 🔹 Repair Management
+- Device information  
+- Damage diagnosis  
+- Repair status tracking  
+- Cost & time estimation  
+- Spare part management  
+
+### 🔹 Technician Workflow
+- Claim unassigned repair jobs  
+- Perform diagnosis  
+- Update repair progress  
+- Finalize repair tasks  
+
+### 🔹 Payment & Invoice
+- Payment processing  
+- Printable invoices  
+- Automatic loyalty point generation  
+
+### 🔹 Authentication & RBAC
+- Login/Register  
+- Roles: Admin, Cashier, Technician, Customer  
+- Role-restricted access  
+
+---
+
+## 👥 User Roles
+
+### 1️⃣ Customer (User)
+- View repair status  
+- View & redeem loyalty points  
+- Access personal dashboard  
+
+### 2️⃣ Admin
+- Full access to all modules  
+- Complete CRUD controls  
+- System-wide monitoring  
+
+### 3️⃣ Cashier
+- Create repair entries  
+- Create customer accounts  
+- Process payments  
+- Print invoices  
+- Assist in redeeming points  
+
+### 4️⃣ Technician
+- Claim repair jobs  
+- Provide diagnosis  
+- Add required spare parts  
+- Update repair flow:  
+  `On Progress → Waiting Sparepart → Testing → Completed`  
+- Finish the repair  
+
+---
+
+## 🔄 Service Workflow
+
+### **1. Repair Intake (Cashier)**
+1. Customer arrives requesting repair service  
+2. Cashier checks customer account:
+   - If none → create a new account  
+3. Cashier creates a repair entry  
+4. The system generates a tracking number  
+5. Customer waits for the service progress  
+
+---
+
+### **2. Technician Workflow**
+1. Technician claims a repair job  
+2. Performs damage diagnosis  
+3. Inputs the following:
+   - Diagnosis result  
+   - Required spare parts  
+   - Cost estimation  
+   - Estimated repair time  
+4. Updates repair status accordingly  
+5. Finalizes work with **Finish Repair**  
+
+---
+
+### **3. Payment Process**
+1. Customer returns once the repair status is **Completed**  
+2. Cashier opens the repair entry → selects **Payment**  
+3. Customer pays (cash/transfer/etc.)  
+4. Cashier prints the invoice  
+5. Customer receives loyalty points  
+
+---
+
+## 🗂️ Project Versions
+
+| Branch | Description | Status |
+|--------|-------------|--------|
+| **main** | Development version — active feature updates | 🔧 Active Development |
+| **final** / **build** | Production-ready compiled version | 🚀 Stable Release |
+
+---
+
+## ▶️ Installation (Development Mode)
+
+Clone the repository:
+
+```bash
+git clone <repository-url>
+cd repairo
+Install dependencies:
+
+composer install
+npm install
+
+
+Setup environment variables:
+
+cp .env.example .env
+php artisan key:generate
+
+
+Run migrations:
+
+php artisan migrate
+
+
+Run development servers:
+
+npm run dev
+php artisan serve
+
+🚀 Production Build
+npm run build
+php artisan optimize
