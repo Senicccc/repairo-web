@@ -29,13 +29,12 @@ The system provides complete management of customers, repair workflows, technici
 
 Repairo is built using:
 
-- **Laravel** — Backend framework (MVC architecture)  
-- **Laravel Breeze** — Authentication scaffolding  
-- **Tailwind CSS** — Utility-first styling framework  
-- **MySQL** — Relational database  
-- **Laravel Migrations** — Database schema management  
-- **Vite** — Asset bundler & build tool  
-- *(Optional)* **Flowbite** — Tailwind-based UI components  
+- **Laravel** - Backend framework (MVC architecture)  
+- **Laravel Breeze** - Authentication scaffolding  
+- **Tailwind CSS** - Utility-first styling framework  
+- **MySQL** - Relational database  
+- **Laravel Migrations** - Database schema management  
+- **Vite** - Asset bundler & build tool
 
 ---
 
